@@ -1,0 +1,24 @@
+{% extends "BlueHive/base.html" %}
+
+
+{% block sidebar %}
+    <ul>
+        <li><a href="/event/overview">Event overview</a></li>
+        <li><a href="/event/add">add Event </a></li>
+        <li><a href="/superadmin/">Admin Backend</a></li>
+    </ul>
+{% endblock %}
+
+{%  block content %}
+<h1>Events</h1>
+    {%  if form.errors %}
+    <p class="error">Sorry, that's not a valid username or password</p>
+    {% endif %}
+
+    {% for event in events %}
+    <h2><a href="/event/{{ event.id }}/">{{ event.name }}</a></h2>
+    <h1>{{ event.title }}</h1>
+
+    {% endfor %}
+
+{% endblock %}

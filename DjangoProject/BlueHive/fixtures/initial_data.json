@@ -1,0 +1,207 @@
+[
+  {
+    "model": "BlueHive.Language",
+    "pk": 1,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "English",
+      "abbreviation": "EN"
+    }
+  },
+  {
+    "model": "BlueHive.Language",
+    "pk": 2,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "French",
+      "abbreviation": "FR"
+    }
+  },
+  {
+    "model": "BlueHive.Language",
+    "pk": 3,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "Spanish",
+      "abbreviation": "SP"
+    }
+  },
+  {
+    "model": "BlueHive.Language",
+    "pk": 4,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "Italian",
+      "abbreviation": "IT"
+    }
+  },
+  {
+    "model": "BlueHive.Language",
+    "pk": 5,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "German",
+      "abbreviation": "DE"
+    }
+  },
+  {
+    "model": "BlueHive.License",
+    "pk": 1,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "car",
+      "description": "driving a car"
+    }
+  },
+  {
+    "model": "BlueHive.License",
+    "pk": 2,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "truck",
+      "description": "driving a truck"
+    }
+  },
+  {
+    "model": "BlueHive.License",
+    "pk": 3,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "car trailer",
+      "description": "driving a car with a trailer"
+    }
+  },
+  {
+    "model": "BlueHive.License",
+    "pk": 4,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "stacker",
+      "description": "driving a stacker"
+    }
+  },
+  {
+    "model": "BlueHive.UserType",
+    "pk": 1,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "NewUser"
+    }
+  },
+  {
+    "model": "BlueHive.UserType",
+    "pk": 2,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "ActiveUser"
+    }
+  },
+  {
+    "model": "BlueHive.UserType",
+    "pk": 3,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "LockedUser"
+    }
+  },
+  {
+    "model": "BlueHive.UserType",
+    "pk": 4,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "Moderator"
+    }
+  },
+  {
+    "model": "BlueHive.UserType",
+    "pk": 5,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "name": "Administrator"
+    }
+  },
+  {
+    "model": "BlueHive.UserRating",
+    "pk": 1,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "value": -3,
+      "description": "worst user ever"
+    }
+  },
+  {
+    "model": "BlueHive.UserRating",
+    "pk": 2,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "value": -2,
+      "description": "really bad user"
+    }
+  },
+  {
+    "model": "BlueHive.UserRating",
+    "pk": 3,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "value": -1,
+      "description": "bad user"
+    }
+  },
+  {
+    "model": "BlueHive.UserRating",
+    "pk": 4,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "value": 0,
+      "description": "neutral user"
+    }
+  },
+  {
+    "model": "BlueHive.UserRating",
+    "pk": 5,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "value": 1,
+      "description": "good user"
+    }
+  },
+  {
+    "model": "BlueHive.UserRating",
+    "pk": 6,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "value": 2,
+      "description": "really good user"
+    }
+  },
+  {
+    "model": "BlueHive.UserRating",
+    "pk": 7,
+    "fields": {
+      "date_created": "2015-11-11T17:41:28+00:00",
+      "date_altered": "2015-11-11T17:41:28+00:00",
+      "value": 3,
+      "description": "best user ever"
+    }
+  }
+]
