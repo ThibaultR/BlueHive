@@ -5,11 +5,88 @@
 
     <h2>Register</h2>
     <form action="/user/register/" method="post">{% csrf_token %}
-    {{ form }}
+
+        {{ form.non_field_errors }}
+        <div class="fieldWrapper">
+            {{ form.email.errors }}
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
+            {{ form.email }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.password1.errors }}
+            <label for="{{ form.password1.id_for_label }}">{{ form.password1.label_tag }}</label>
+            {{ form.password1 }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.password2.errors }}
+            <label for="{{ form.password2.id_for_label }}">{{ form.password2.label_tag }}</label>
+            {{ form.password2 }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.first_name.errors }}
+            <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label_tag }}</label>
+            {{ form.first_name }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.last_name.errors }}
+            <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label_tag }}</label>
+            {{ form.last_name }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.phone_number.errors }}
+            <label for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label_tag }}</label>
+            {{ form.phone_number }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.birth_date.errors }}
+            <label for="{{ form.birth_date.id_for_label }}">{{ form.birth_date.label_tag }}</label>
+            {{ form.birth_date }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.social_security_number.errors }}
+            <label for="{{ form.social_security_number.id_for_label }}">{{ form.social_security_number.label_tag }}</label>
+            {{ form.social_security_number }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.address.errors }}
+            <label for="{{ form.address.id_for_label }}">{{ form.address.label_tag }}</label>
+            {{ form.address }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.zip_code.errors }}
+            <label for="{{ form.zip_code.id_for_label }}">{{ form.zip_code.label_tag }}</label>
+            {{ form.zip_code }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.city.errors }}
+            <label for="{{ form.city.id_for_label }}">{{ form.city.label_tag }}</label>
+            {{ form.city }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.nationality.errors }}
+            <label for="{{ form.nationality.id_for_label }}">{{ form.nationality.label_tag }}</label>
+            {{ form.nationality }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.education.errors }}
+            <label for="{{ form.education.id_for_label }}">{{ form.education.label_tag }}</label>
+            {{ form.education }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.job_position.errors }}
+            <label for="{{ form.job_position.id_for_label }}">{{ form.job_position.label_tag }}</label>
+            {{ form.job_position }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.work_experience.errors }}
+            <label for="{{ form.work_experience.id_for_label }}">{{ form.work_experience.label_tag }}</label>
+            {{ form.work_experience }}
+        </div>
 
 
-    <input type="submit" value="Register" />
-
+        <input type="submit" value="Register" />
     </form>
+
+
 
 {% endblock %}

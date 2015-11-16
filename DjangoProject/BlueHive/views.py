@@ -6,9 +6,8 @@ from django.core.context_processors import csrf
 from django.contrib.auth import views
 from django.views.generic.base import TemplateView
 from BlueHive.models import Event
-from forms import MyRegistrationForm
 from forms import EventForm
-from forms import UserProfileForm
+from forms import CustomUserChangeForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
@@ -51,14 +50,20 @@ def user_logout(request):
 
 def user_register(request):
     if request.method == 'POST':
-        form = MyRegistrationForm(request.POST)
+        #form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
+            print "This line will be printed."
             form.save()
             return HttpResponseRedirect('/user/register_success')
+        else:
+            #render_to_response('BlueHive/user/register.html', {'form': form})
+            print form.errors #To see the form errors in the console.
+            return render(request, 'BlueHive/user/register.html', {'form': form})
     args = {}
     args.update(csrf(request))
 
-    args['form'] = MyRegistrationForm()
+    args['form'] = CustomUserCreationForm()
 
     return render_to_response('BlueHive/user/register.html', args)
 
@@ -99,14 +104,14 @@ def event_deactivate(request, event_id):
 @login_required
 def user_data(request):
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user.profile)
+        form = CustomUserChangeForm(request.POST, instance=request.user.profile)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/user/loggedin')
     else:
         user = request.user
         profile =user.profile
-        form = UserProfileForm(instance=profile)
+        form = CustomUserChangeForm(instance=profile)
 
     args = {}
     args.update(csrf(request))

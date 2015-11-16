@@ -6,6 +6,27 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 
+class UserType(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_altered = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=254)
+
+
+class UserRating(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_altered = models.DateTimeField(auto_now=True)
+    value = models.IntegerField(default=0)
+    description = models.CharField(max_length=254, blank=True)
+
+class Nationality(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_altered = models.DateTimeField(auto_now=True)
+    code = models.CharField(max_length=254, blank=True)
+    value = models.CharField(max_length=254, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.value)
+
 '''https://www.caktusgroup.com/blog/2013/08/07/migrating-custom-user-model-django/'''
 class CustomUserManager(BaseUserManager):
 
@@ -42,15 +63,37 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     Email and password are required. Other fields are optional.
     """
     email = models.EmailField(_('email address'), max_length=254, unique=True)
+    date_created = models.DateTimeField(_('date joined'), default=timezone.now)
+    date_altered = models.DateTimeField(auto_now=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=False)
     last_name = models.CharField(_('last name'), max_length=30, blank=False)
+    user_type = models.ForeignKey(UserType, default=1)
+    rating = models.ForeignKey(UserRating, default=4)
+    comment = models.CharField(max_length=254, blank=True)
+    phone_number = models.IntegerField()
+    birth_date = models.DateField()
+    social_security_number = models.CharField(max_length=254)
+    address = models.CharField(max_length=254)
+    zip_code = models.CharField(max_length=254)
+    city = models.CharField(max_length=254)
+    nationality = models.ForeignKey(Nationality, default=198)
+    education = models.CharField(max_length=254)
+    job_position = models.CharField(max_length=254)
+    work_experience = models.CharField(max_length=254)
+    passport_number = models.CharField(max_length=254, blank=True)
+    passport_authority = models.CharField(max_length=254, blank=True)
+    passport_issue_date = models.DateField(null=True)
+    passport_expiration_date = models.DateField(null=True)
+    bank_name = models.CharField(max_length=254, blank=True)
+    bank_iban = models.CharField(max_length=254, blank=True)
+    bank_bic = models.CharField(max_length=254, blank=True)
+
     is_staff = models.BooleanField(_('staff status'), default=False,
                                    help_text=_('Designates whether the user can log into this admin '
                                                'site.'))
     is_active = models.BooleanField(_('active'), default=True,
                                     help_text=_('Designates whether this user should be treated as '
                                                 'active. Unselect this instead of deleting accounts.'))
-    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     objects = CustomUserManager()
 
@@ -98,16 +141,9 @@ class Event(models.Model):
     def __unicode__(self):
         return self.name
 
-class UserType(models.Model):
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_altered = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=254)
 
-class UserRating(models.Model):
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_altered = models.DateTimeField(auto_now=True)
-    value = models.IntegerField(default=0)
-    description = models.CharField(max_length=254, blank=True)
+
+
 
 class Language(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
@@ -120,33 +156,6 @@ class License(models.Model):
     date_altered = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=254)
     description = models.CharField(max_length=254, blank=True)
-
-'''
-class UserProfile(models.Model):
-    user = models.OneToOneField(User)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_altered = models.DateTimeField(auto_now=True)
-    user_type = models.ForeignKey(UserType)
-    rating = models.ForeignKey(UserRating)
-    comment = models.CharField(max_length=254, blank=True)
-    phone_number = models.IntegerField(blank=True)
-    birth_date = models.DateField()
-    social_security_number = models.CharField(max_length=254)
-    address = models.CharField(max_length=254)
-    zip_code = models.CharField(max_length=254)
-    city = models.CharField(max_length=254)
-    nationality = models.CharField(max_length=254)
-    education = models.CharField(max_length=254)
-    job_position = models.CharField(max_length=254)
-    work_experience = models.CharField(max_length=254)
-    passport_number = models.CharField(max_length=254)
-    passport_authority = models.CharField(max_length=254)
-    passport_issue_date = models.DateField()
-    passport_expiration_date = models.DateField()
-    bank_name = models.CharField(max_length=254, blank=True)
-    bank_iban = models.CharField(max_length=254, blank=True)
-    bank_bic = models.CharField(max_length=254, blank=True)
-'''
 
 
 class UserLanguage(models.Model):

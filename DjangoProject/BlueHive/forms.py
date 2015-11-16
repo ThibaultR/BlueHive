@@ -13,11 +13,15 @@ class CustomUserCreationForm(UserCreationForm):
 
     def __init__(self, *args, **kargs):
         super(CustomUserCreationForm, self).__init__(*args, **kargs)
-        del self.fields['username']
+        #del self.fields['username']
 
     class Meta:
         model = CustomUser
-        fields = ("email",)
+        fields = ['email', 'first_name', 'last_name', 'phone_number', 'birth_date', 'social_security_number', 'address', 'zip_code',
+                  'city', 'nationality', 'education', 'job_position', 'work_experience']
+        #exclude = ['date_created', 'date_altered', 'user_type','rating', 'comment', 'is_staff', 'is_active', 'status']
+
+
 
 class CustomUserChangeForm(UserChangeForm):
     """A form for updating users. Includes all the fields on
@@ -33,22 +37,6 @@ class CustomUserChangeForm(UserChangeForm):
         model = CustomUser
         fields = '__all__'
 
-#Form inherits from UserCreationForm
-class MyRegistrationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-
-    # Hold anything that isn't a form field
-    class Meta:
-        model = CustomUser
-        fields = '__all__'
-
-    def save(self, commit=True):
-        user = super(UserCreationForm, self).save(commit=False)
-        user.email = self.cleaned_data['email']
-
-        if commit:
-            user.save()
-        return user
 
 class EventForm(forms.ModelForm):
 
@@ -56,8 +44,3 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = '__all__'
 
-class UserProfileForm(forms.ModelForm):
-
-    class Meta:
-        model = CustomUser
-        fields = ('email',)
