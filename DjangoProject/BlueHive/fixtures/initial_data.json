@@ -5,7 +5,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "name": "English",
+      "value": "English",
       "abbreviation": "EN"
     }
   },
@@ -15,7 +15,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "name": "French",
+      "value": "French",
       "abbreviation": "FR"
     }
   },
@@ -25,7 +25,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "name": "Spanish",
+      "value": "Spanish",
       "abbreviation": "SP"
     }
   },
@@ -35,7 +35,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "name": "Italian",
+      "value": "Italian",
       "abbreviation": "IT"
     }
   },
@@ -45,7 +45,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "name": "German",
+      "value": "German",
       "abbreviation": "DE"
     }
   },
@@ -55,7 +55,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "name": "car",
+      "value": "car",
       "description": "driving a car"
     }
   },
@@ -65,7 +65,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "name": "truck",
+      "value": "truck",
       "description": "driving a truck"
     }
   },
@@ -75,7 +75,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "name": "car trailer",
+      "value": "car trailer",
       "description": "driving a car with a trailer"
     }
   },
@@ -85,7 +85,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "name": "stacker",
+      "value": "stacker",
       "description": "driving a stacker"
     }
   },

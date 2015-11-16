@@ -83,6 +83,18 @@
             {{ form.work_experience }}
         </div>
 
+        <div class="fieldWrapper">
+            {{ form.language.errors }}
+            <label for="{{ form.language.id_for_label }}">{{ form.language.label_tag }}</label>
+            {{ form.language }}
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.license.errors }}
+            <label for="{{ form.license.id_for_label }}">{{ form.license.label_tag }}</label>
+            {{ form.license }}
+        </div>
+
 
         <input type="submit" value="Register" />
     </form>

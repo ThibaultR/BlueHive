@@ -38,7 +38,7 @@ def user_auth(request):
         return HttpResponseRedirect('/user/invalid')
 
 def user_loggedin(request):
-    return render_to_response('BlueHive/user/loggedin.html', {'full_name': request.user.username})
+    return render_to_response('BlueHive/user/loggedin.html', {'full_name': request.user.first_name + ' ' + request.user.last_name})
 
 def user_invalid_login(request):
     return render_to_response('BlueHive/user/invalid_login.html')
@@ -54,7 +54,9 @@ def user_register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             print "This line will be printed."
-            form.save()
+            new_user = form.save(commit=False)
+            new_user.save()
+            form.save_m2m()
             return HttpResponseRedirect('/user/register_success')
         else:
             #render_to_response('BlueHive/user/register.html', {'form': form})

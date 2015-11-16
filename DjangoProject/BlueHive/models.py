@@ -27,6 +27,27 @@ class Nationality(models.Model):
     def __unicode__(self):
         return unicode(self.value)
 
+class Language(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_altered = models.DateTimeField(auto_now=True)
+    value = models.CharField(max_length=254)
+    abbreviation =  models.CharField(max_length=20)
+
+    def __unicode__(self):
+        return unicode(self.value)
+
+class License(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_altered = models.DateTimeField(auto_now=True)
+    value = models.CharField(max_length=254)
+    description = models.CharField(max_length=254, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.value)
+
+
+
+
 '''https://www.caktusgroup.com/blog/2013/08/07/migrating-custom-user-model-django/'''
 class CustomUserManager(BaseUserManager):
 
@@ -87,6 +108,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     bank_name = models.CharField(max_length=254, blank=True)
     bank_iban = models.CharField(max_length=254, blank=True)
     bank_bic = models.CharField(max_length=254, blank=True)
+    language = models.ManyToManyField(Language,  null=True, blank=True)
+    license = models.ManyToManyField(License,  null=True, blank=True)
 
     is_staff = models.BooleanField(_('staff status'), default=False,
                                    help_text=_('Designates whether the user can log into this admin '
@@ -142,34 +165,6 @@ class Event(models.Model):
         return self.name
 
 
-
-
-
-class Language(models.Model):
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_altered = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=254)
-    abbreviation =  models.CharField(max_length=20)
-
-class License(models.Model):
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_altered = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=254)
-    description = models.CharField(max_length=254, blank=True)
-
-
-class UserLanguage(models.Model):
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_altered = models.DateTimeField(auto_now=True)
-    user_id = models.ForeignKey(CustomUser)
-    language_id = models.ForeignKey(Language)
-
-
-class UserLicense(models.Model):
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_altered = models.DateTimeField(auto_now=True)
-    user_id = models.ForeignKey(CustomUser)
-    license_id = models.ForeignKey(License)
 
 
 

@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from models import CustomUser
@@ -13,13 +12,15 @@ class CustomUserCreationForm(UserCreationForm):
 
     def __init__(self, *args, **kargs):
         super(CustomUserCreationForm, self).__init__(*args, **kargs)
+        #self.fields["language"].widget = forms.CheckboxSelectMultiple()
+        #self.fields["language"].help_text = ""
         #del self.fields['username']
 
     class Meta:
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'phone_number', 'birth_date', 'social_security_number', 'address', 'zip_code',
-                  'city', 'nationality', 'education', 'job_position', 'work_experience']
-        #exclude = ['date_created', 'date_altered', 'user_type','rating', 'comment', 'is_staff', 'is_active', 'status']
+                  'city', 'nationality', 'education', 'job_position', 'work_experience', 'language', 'license']
+        widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple, 'birth_date': forms.DateInput}
 
 
 
