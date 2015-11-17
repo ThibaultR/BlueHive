@@ -4,7 +4,7 @@
 {%  block content %}
 
     <h2>Register</h2>
-    <form action="/user/register/" method="post">{% csrf_token %}
+    <form action="/user/register/" method="post" enctype="multipart/form-data">{% csrf_token %}
 
         {{ form.non_field_errors }}
         <div class="fieldWrapper">
@@ -93,6 +93,12 @@
             {{ form.license.errors }}
             <label for="{{ form.license.id_for_label }}">{{ form.license.label_tag }}</label>
             {{ form.license }}
+        </div>
+
+        <div class="fieldWrapper">
+            {{ form.image.errors }}
+            <label for="{{ form.image.id_for_label }}">{{ form.image.label_tag }}</label>
+            {{ form.image }}
         </div>
 
 

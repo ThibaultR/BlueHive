@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.contrib.auth import views
-from django.views.generic.base import TemplateView
 from BlueHive.models import Event
 from forms import EventForm
 from forms import CustomUserChangeForm, CustomUserCreationForm
@@ -51,9 +50,8 @@ def user_logout(request):
 def user_register(request):
     if request.method == 'POST':
         #form = CustomUserCreationForm(request.POST)
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            print "This line will be printed."
             new_user = form.save(commit=False)
             new_user.save()
             form.save_m2m()
@@ -71,6 +69,27 @@ def user_register(request):
 
 def user_register_success(request):
     return render_to_response('BlueHive/user/register_success.html')
+
+
+@login_required
+def user_data(request):
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/user/events')
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+        args = {}
+        args.update(csrf(request))
+
+        args['form'] = form
+
+        return render_to_response('BlueHive/user/user_data.html', args)
+
+
+
+
 
 def event_add(request):
     if request.POST:
@@ -102,26 +121,5 @@ def event_deactivate(request, event_id):
         e.status = -1
         e.save()
         return HttpResponseRedirect('/event/overview')
-
-@login_required
-def user_data(request):
-    if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=request.user.profile)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/user/loggedin')
-    else:
-        user = request.user
-        profile =user.profile
-        form = CustomUserChangeForm(instance=profile)
-
-    args = {}
-    args.update(csrf(request))
-
-    args['form'] = form
-
-    return render_to_response(('BlueHive/user/user_data.html', args))
-
-
 
 

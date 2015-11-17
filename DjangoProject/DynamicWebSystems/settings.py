@@ -104,3 +104,5 @@ STATIC_URL = '/static/'
 
 #AUTH_PROFILE_MODULE = 'BlueHive.UserProfile'
 AUTH_USER_MODEL = 'BlueHive.CustomUser'
+LOGIN_URL='/'
+LOGIN_REDIRECT_URL='/'

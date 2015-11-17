@@ -110,6 +110,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     bank_bic = models.CharField(max_length=254, blank=True)
     language = models.ManyToManyField(Language,  null=True, blank=True)
     license = models.ManyToManyField(License,  null=True, blank=True)
+    #https://coderwall.com/p/bz0sng/simple-django-image-upload-to-model-imagefield
+    image = models.ImageField(upload_to = 'user_pictures/', default = 'user_pictures/None/no-img.jpg')
+
 
     is_staff = models.BooleanField(_('staff status'), default=False,
                                    help_text=_('Designates whether the user can log into this admin '
@@ -147,6 +150,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         """
         send_mail(subject, message, from_email, [self.email])
 
+    def __str__(self):              # __unicode__ on Python 2
+        return self.email
 
 class Event(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
