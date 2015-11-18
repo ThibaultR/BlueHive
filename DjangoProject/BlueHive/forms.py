@@ -3,6 +3,10 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from models import CustomUser
 from models import Event
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+
+MY_DATE_FORMATS = ['%d.%m.%Y',]
+
 
 class CustomUserCreationForm(UserCreationForm):
     """
@@ -20,40 +24,47 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'phone_number', 'birth_date', 'social_security_number', 'address', 'zip_code',
                   'city', 'nationality', 'education', 'job_position', 'work_experience', 'language', 'license', 'image']
-        widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple, 'birth_date': forms.DateInput}
+        widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple, 'birth_date': forms.DateInput()}
 
 
 
 class CustomUserChangeForm(UserChangeForm):
-    """A form for updating users. Includes all the fields on
-    the user, but replaces the password field with admin's
-    password hash display field.
+
+    """A form for updating users.
+    Includes all the fields on the user, but replaces the password field
+    with admin's password hash display field.
     """
 
-    def __init__(self, *args, **kargs):
-        super(CustomUserChangeForm, self).__init__(*args, **kargs)
-        #del self.fields['username']
-
-    def save(self, commit=True):
-        user = super(CustomUserChangeForm, self).save(commit=False)
-        password = self.cleaned_data["password"]
-        if password:
-            user.set_password(password)
-        if commit:
-            user.save()
-        return user
+    password = ReadOnlyPasswordHashField(label="Password", help_text=(
+        "Raw passwords are not stored, so there is no way to see "
+        "this user's password, but you can change the password "
+        "using <a href=\"password/\">this form</a>."))
 
     class Meta:
         model = CustomUser
-        exclude = ['last_login', 'date_joined', 'is_active', 'is_superuser', 'is_staff']
-        fields = ['first_name', 'last_name', 'phone_number', 'birth_date', 'social_security_number', 'address', 'zip_code',
-                  'city', 'nationality', 'education', 'job_position', 'work_experience', 'language', 'license', 'image']
+        exclude = ['date_created', 'rating', 'user_type', 'passport_issue_date', 'passport_expiration_date', 'user_group']
         widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple, 'birth_date': forms.DateInput}
+
+
+    def __init__(self, *args, **kwargs):
+        """Init the form."""
+        super(CustomUserChangeForm, self).__init__(*args, **kwargs)
+
+
+    def clean_password(self):
+        """Clean password.
+        Regardless of what the user provides, return the initial value.
+        This is done here, rather than on the field, because the
+        field does not have access to the initial value.
+        :return str password:
+        """
+        return self.initial["password"]
 
 
 class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = '__all__'
+        exclude = ['status']
+        #fields = '__all__'
 

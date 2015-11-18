@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 
+
 class UserType(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_altered = models.DateTimeField(auto_now=True)
@@ -44,6 +45,16 @@ class License(models.Model):
 
     def __unicode__(self):
         return unicode(self.value)
+
+class UserGroup(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_altered = models.DateTimeField(auto_now=True)
+    value = models.CharField(max_length=254)
+    description = models.CharField(max_length=254, blank=True)
+
+    def __unicode__(self):
+        return unicode(self.value)
+
 
 
 
@@ -89,6 +100,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_('first name'), max_length=30, blank=False)
     last_name = models.CharField(_('last name'), max_length=30, blank=False)
     user_type = models.ForeignKey(UserType, default=1)
+    user_group = models.ManyToManyField(UserGroup, default=1)
     rating = models.ForeignKey(UserRating, default=4)
     comment = models.CharField(max_length=254, blank=True)
     phone_number = models.IntegerField()
@@ -99,8 +111,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     city = models.CharField(max_length=254)
     nationality = models.ForeignKey(Nationality, default=198)
     education = models.CharField(max_length=254)
-    job_position = models.CharField(max_length=254)
-    work_experience = models.CharField(max_length=254)
+    job_position = models.CharField(max_length=254, blank=True)
+    work_experience = models.CharField(max_length=254, blank=True)
     passport_number = models.CharField(max_length=254, blank=True)
     passport_authority = models.CharField(max_length=254, blank=True)
     passport_issue_date = models.DateField(null=True)
@@ -160,16 +172,29 @@ class Event(models.Model):
     comment = models.CharField(max_length=254, blank=True)
     description = models.TextField(max_length=254, blank=True)
     location = models.CharField(max_length=254)
-    begin_time = models.DateField
+    begin_time = models.DateTimeField()
     end_time = models.CharField(max_length=254)
-    #group_id as a FOREIGN KEY to the GROUPS
+    user_group = models.ForeignKey(UserGroup, default=1)
     #-1 killed, 0 nothing done, 1 users set, 2 times users set, 3 everything ok
-    status = models.IntegerField
+    status = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.name
 
 
+class EventRequest(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_altered = models.DateTimeField(auto_now=True)
+    event_id = models.ForeignKey(Event)
+    user_id = models.ForeignKey(CustomUser)
+    user_comment = models.CharField(max_length=254, blank=True)
+    # -1 rejected, 0 wait, 1 accepted
+    status = models.IntegerField(default = 0)
+    begin_time = models.CharField(default='', max_length=254, blank=True)
+    end_time = models.CharField(default = '', max_length=254, blank=True)
+    mail_sent = models.BooleanField(default = False)
+
+    unique_together = ("event_id", "user_id")
 
 
 

@@ -1,8 +1,0 @@
-{% extends "BlueHive/base.html" %}
-
-{%  block content %}
-   <h2>Hi {{ full_name }} Logged in now!</h2>
-    <p>Click <a href="{% url 'BlueHive:user_logout' %}">here</a> to logout. </p>
-    <p>Click <a href="{% url 'BlueHive:user_data' %}">here</a> to edit your profile information. </p>
-
-{% endblock %}

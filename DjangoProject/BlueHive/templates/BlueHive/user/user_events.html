@@ -1,8 +1,30 @@
 {% extends "BlueHive/base.html" %}
 
 
+{% block sidebar %}
+<ul>
+    <li><a href="/user/events">Event overview </a></li>
+    <li><a href="/user/data">Change Data</a></li>
+    <li><a href="/user/logout">Logout </a></li>
+    <li><a href="/superadmin/">Admin Backend</a></li>
+</ul>
+{% endblock %}
+
 {%  block content %}
 
-<h1>Show the events for this user</h1>
+<h1>My Events</h1>
+
+{% for event_request in applied_events %}
+<h2>{{ event_request.event_id.name }} beginning at {{ event_request.event_id.begin_time }} with the status {{ event_request.status }} </a></h2>
+{% endfor %}
+
+
+<h1>New Events</h1>
+
+{% for event in new_events %}
+<h2>{{ event.name }} <a href="/user/events/{{ event.id }}/">apply now</a></h2>
+<h1>{{ event.title }}</h1>
+
+{% endfor %}
 
 {% endblock %}
