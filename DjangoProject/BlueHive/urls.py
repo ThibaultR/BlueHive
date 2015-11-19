@@ -1,12 +1,8 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from . import views
+from django.conf.urls import (handler400, handler403, handler404, handler500)
 
-''' part for user registration, user events and user data ''',
-
-#url(r'^user/events/', 'BlueHive.views.user_events', name='user_events'),
-#url(r'^user/data/', 'BlueHive.views.user_data', name='user_data'),
-''' part for event management by administrator '''
 urlpatterns = [
     url(r'^$', 'BlueHive.views.user_login'),
     url(r'^user/login/', 'BlueHive.views.user_login', name='user_login'),
@@ -21,4 +17,16 @@ urlpatterns = [
     url(r'^event/overview', 'BlueHive.views.event_overview', name='event_overview'),
     url(r'^event/add', 'BlueHive.views.event_add', name='event_add'),
     url(r'^event/(?P<event_id>\d+)/$', 'BlueHive.views.event', name='event'),
+    url(r'^group/$', 'BlueHive.views.group_overview', name='group_overview'),
+    url(r'^group/overview/$', 'BlueHive.views.group_overview', name='group_overview2'),
+    url(r'^group/add/$', 'BlueHive.views.group_add', name='group_add'),
+    url(r'^group/edit/$', 'BlueHive.views.group_edit', name='group_edit'),
+
+
+    url(r'^group/delete/(?P<group_id>\d+)/$', 'BlueHive.views.group_delete', name='group_delete'),
 ]
+#handler404 = 'views.page_not_found'
+
+#handler400 = 'views.bad_request'
+#handler403 = 'views.permission_denied'
+#handler500 = 'views.server_error'

@@ -1,0 +1,56 @@
+{% extends "BlueHive/base.html" %}
+
+{% block head %}
+<script type="text/javascript" charset="utf-8">
+
+    $(function() {
+
+        $(".click").editable("/group/edit/", {
+            submitdata: { csrfmiddlewaretoken : "{{ csrf_token }}", _method: "post"},
+            select : true,
+            submit : 'OK',
+            cancel : 'cancel',
+            cssclass : "editable"
+        });
+
+
+    });
+</script>
+{% endblock %}
+
+{% block sidebar %}
+<ul>
+    <li><a href="/event/overview">Event overview</a></li>
+    <li><a href="/event/add">add Event </a></li>
+    <li><a href="/superadmin/">Admin Backend</a></li>
+</ul>
+{% endblock %}
+
+{%  block content %}
+<!--http://www.appelsiini.net/projects/jeditable -->
+<h1>Groups</h1>
+
+{% if editform %}
+
+{% endif %}
+
+<!-- todo make edit button work -->
+{% for group in groups %}
+<p class="click" style="display: inline" id="{{ group.id }}">{{ group.value }}</p> <p style="display: inline"><a onclick="" href="">edit</a> <a href="/group/delete/{{ group.id }}/">delete</a></p> </br>
+
+{% endfor %}
+
+<h1>Add new group</h1>
+
+<form action="/group/add/" method="post">{% csrf_token %}
+    <ul>
+        {{ newusergroupform.as_ul }}
+    </ul>
+
+    <input type="submit" name="submit" value="Add UserGroup">
+</form>
+
+
+
+
+{% endblock %}

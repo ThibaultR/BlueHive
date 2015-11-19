@@ -4,13 +4,26 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.contrib.auth import views
-from BlueHive.models import Event, UserGroup, EventRequest
-from forms import EventForm
+from BlueHive.models import Event, UserGroup, EventRequest,CustomUser
+from forms import EventForm, UserGroupForm
 from forms import CustomUserChangeForm, CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import timezone
+from django.shortcuts import get_list_or_404, get_object_or_404
+from django.views.generic.edit import UpdateView
+from django.template import RequestContext
+
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.core.urlresolvers import reverse_lazy
+from models import Author
+
 # Create your views here.
+def handler404(request):
+    response = render_to_response('BlueHive/404.html', {},
+                                  context_instance=RequestContext(request))
+    response.status_code = 404
+    return response
 
 
 
@@ -157,5 +170,46 @@ def event_deactivate(request, event_id):
         e.status = -1
         e.save()
         return HttpResponseRedirect('/event/overview')
+
+
+def group_overview(request):
+    args = {}
+    args.update(csrf(request))
+    args['newusergroupform'] = UserGroupForm()
+    args['groups'] = UserGroup.objects.all()
+
+
+    return render_to_response('BlueHive/group/group_overview.html', args)
+
+
+def group_add(request):
+    if request.POST:
+        form =UserGroupForm(request.POST)
+        if form.is_valid():
+            form.save()
+        else:
+            return render(request, 'BlueHive/group/group_overview.html', {'newusergroupform': form, 'groups': UserGroup.objects.all()})
+    return HttpResponseRedirect('/group/overview')
+
+
+def group_edit(request):
+    if request.POST:
+        id = request.POST.get('id')
+        value = request.POST.get('value')
+        usergroup = get_object_or_404(UserGroup, pk=id)
+        usergroup.value = value
+        usergroup.save()
+        return HttpResponse(value)
+    return HttpResponseRedirect('/group/overview')
+
+def group_delete(request, group_id):
+    if group_id != '1':
+        # no user should be member of the group any more, automatically done by django when deleting group
+        # all events which belong to this group belong to the default group with id 1
+        Event.objects.filter(user_group=group_id).update(user_group=1)
+        # delete the group itself
+        UserGroup.objects.filter(id=group_id).delete()
+    return HttpResponseRedirect('/group/overview')
+
 
 

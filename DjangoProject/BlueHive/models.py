@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
-
+from django.core.urlresolvers import reverse
 
 class UserType(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
@@ -197,6 +197,11 @@ class EventRequest(models.Model):
     unique_together = ("event_id", "user_id")
 
 
+class Author(models.Model):
+    name = models.CharField(max_length=200)
+
+    def get_absolute_url(self):
+        return reverse('author-detail', kwargs={'pk': self.pk})
 
 
 
