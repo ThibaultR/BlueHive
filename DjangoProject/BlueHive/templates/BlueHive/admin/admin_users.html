@@ -1,16 +1,13 @@
 {% extends "BlueHive/base.html" %}
 
-{% block sidebar %}
-<ul>
-    <li><a href="/event/overview">Event overview</a></li>
-    <li><a href="/event/add">add Event </a></li>
-    <li><a href="/superadmin/">Admin Backend</a></li>
-</ul>
-{% endblock %}
+
 
 {%  block content %}
 <h1>Newly registered users</h1>
+{% for user in new_users %}
+<p>{{ user.last_name }} {{ user.first_name }}  {{ user.city }} activate delete</p>
 
+{% endfor %}
 
 <h1>Activated users</h1>
 

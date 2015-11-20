@@ -50,7 +50,6 @@ class UserGroup(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_altered = models.DateTimeField(auto_now=True)
     value = models.CharField(max_length=254)
-    description = models.CharField(max_length=254, blank=True)
 
     def __unicode__(self):
         return unicode(self.value)
@@ -99,6 +98,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_altered = models.DateTimeField(auto_now=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=False)
     last_name = models.CharField(_('last name'), max_length=30, blank=False)
+    # -1 deactivated, 0 new user, 1 active user, 2 moderator, 3 administrator
     account_status = models.IntegerField(default= 0)
     user_group = models.ManyToManyField(UserGroup, default=1)
     rating = models.ForeignKey(UserRating, default=4)

@@ -20,11 +20,24 @@
         <div id="sidebar">
             {% block sidebar %}
             <ul>
-                <li><a href="/event/overview">Events</a></li>
+                <li>User-Part</li>
+                <li><a href="/user/login/">Login</a></li>
+                <li><a href="/user/logout/">Logout</a></li>
+                <li><a href="/user/register/">Register</a></li>
+                <li><a href="/user/data/">Change Data</a></li>
+                <li><a href="/user/events/">Events</a></li>
+                <li></li>
+                <li>Admin</li>
                 <li><a href="/superadmin/">Admin Backend</a></li>
+                <li><a href="/event/overview/">Events</a></li>
+                <li><a href="/event/add/">Add Event</a></li>
+                <li><a href="/admin/users/">User management</a></li>
+                <li><a href="/group/">Group Management</a></li>
+
             </ul>
             {% endblock %}
         </div>
+
 
         <div id="content">
             {% block content %} {% endblock %}

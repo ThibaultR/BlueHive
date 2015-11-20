@@ -34,6 +34,8 @@ def change_password(request):
 
 
 def user_login(request):
+    if request.user.is_authenticated():
+        auth.logout(request)
     c = {}
     c.update(csrf(request))
     return render_to_response('BlueHive/user/login.html', c)
@@ -59,6 +61,8 @@ def user_logout(request):
 
 
 def user_register(request):
+    if request.user.is_authenticated():
+        auth.logout(request)
     if request.method == 'POST':
         #form = CustomUserCreationForm(request.POST)
         form = CustomUserCreationForm(request.POST, request.FILES)
@@ -246,8 +250,7 @@ def group_delete(request, group_id):
 def admin_users(request):
     args = {}
     args.update(csrf(request))
-    args['new_users'] = CustomUser.objects.filter()
+    args['new_users'] = CustomUser.objects.filter(account_status=0)
     args['groups'] = UserGroup.objects.all()
 
-
-    return render_to_response('BlueHive/group/group_overview.html', args)
+    return render_to_response('BlueHive/admin/admin_users.html', args)
