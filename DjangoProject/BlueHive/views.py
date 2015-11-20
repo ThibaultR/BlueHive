@@ -6,7 +6,7 @@ from django.core.context_processors import csrf
 from django.contrib.auth import views
 from BlueHive.models import Event, UserGroup, EventRequest,CustomUser
 from forms import EventForm, UserGroupForm
-from forms import CustomUserChangeForm, CustomUserCreationForm
+from forms import CustomUserChangeForm, CustomUserCreationForm,EventRequestForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import timezone
@@ -109,34 +109,65 @@ def user_data(request):
 @login_required
 def user_events_apply(request, event_id):
     event_id = int(event_id)
-    # check if user is allowed to be part of this event
-    try:
-        event = Event.objects.get(id=event_id)
-        # compare if event is in the right status, date and a group where the user is also part in
-        if event.status != -1 and event.begin_time >= timezone.now() and request.user.user_group.all().filter(value=event.user_group).exists():
-            # check if there is already an EventRequest for this event
-            try:
-                EventRequest.objects.get(event_id=event_id, user_id=request.user.id)
-            except EventRequest.DoesNotExist:
-                #now the new Eventrequest can be created
-                myEventRequest = EventRequest()
-                myEventRequest.event_id = event
-                myEventRequest.user_id = request.user
-                myEventRequest.save()
-    except Event.DoesNotExist:
-        print 'Event with this id doesn\'t exist'
+    if request.method == 'POST':
+        #TODO security of user_comment parameter
+        user_comment = request.POST.get('user_comment')
+        # check if user is allowed to be part of this event
+        try:
+            event = Event.objects.get(id=event_id)
+            # compare if event is in the right status, date and a group where the user is also part in
+            if event.status != -1 and event.begin_time >= timezone.now() and request.user.user_group.all().filter(value=event.user_group).exists():
+                # check if there is already an EventRequest for this event
+                try:
+                    EventRequest.objects.get(event_id=event_id, user_id=request.user.id)
+                except EventRequest.DoesNotExist:
+                    #now the new Eventrequest can be created
+                    myEventRequest = EventRequest()
+                    myEventRequest.event_id = event
+                    myEventRequest.user_id = request.user
+                    myEventRequest.user_comment = user_comment
+                    myEventRequest.save()
+        except Event.DoesNotExist:
+            print 'Event with this id doesn\'t exist'
 
-    return HttpResponseRedirect('/user/events')
+    return HttpResponseRedirect('/user/events/')
 
 
 @login_required
 def user_events(request):
-    # check events which have a group where user is part of
+    args = {}
+    args.update(csrf(request))
+
+# check events which have a group where user is part of
     user_groups = request.user.user_group.all()
-    applied_events = EventRequest.objects.filter(user_id=request.user, event_id__begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(event_id__status=-1)
+    args['applied_events'] = EventRequest.objects.filter(user_id=request.user, event_id__begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(event_id__status=-1)
     applied_events_ids = EventRequest.objects.values_list('event_id', flat=True).filter(user_id=request.user)
-    new_events = Event.objects.filter(user_group=user_groups, begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(id__in=applied_events_ids).exclude(status=-1)
-    return render_to_response('BlueHive/user/user_events.html', {'new_events': new_events, 'applied_events':applied_events})
+    args['new_events'] = Event.objects.filter(user_group=user_groups, begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(id__in=applied_events_ids).exclude(status=-1)
+    return render_to_response('BlueHive/user/user_events.html', args)
+
+
+def user_events_edit_comment(request):
+    if request.POST:
+        user_comment = request.POST.get('value')
+        event_id = request.POST.get('id')
+        user_id = request.user.id
+        data = {'event_id': event_id, 'user_id': user_id,  'user_comment': user_comment}
+        form = EventRequestForm(data)
+
+        if form.is_valid():
+            try:
+                myEventRequest = EventRequest.objects.get(event_id=event_id, user_id=user_id)
+                myEventRequest.user_comment = user_comment
+                myEventRequest.save()
+            except EventRequest.DoesNotExist:
+                return HttpResponse(user_comment)
+
+        else:
+            return HttpResponse(user_comment)
+
+
+        return HttpResponse(user_comment)
+    return HttpResponseRedirect('/user/events')
 
 
 def event_add(request):
@@ -212,4 +243,11 @@ def group_delete(request, group_id):
     return HttpResponseRedirect('/group/overview')
 
 
+def admin_users(request):
+    args = {}
+    args.update(csrf(request))
+    args['new_users'] = CustomUser.objects.filter()
+    args['groups'] = UserGroup.objects.all()
 
+
+    return render_to_response('BlueHive/group/group_overview.html', args)

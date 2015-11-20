@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from models import CustomUser
 from models import Event
 from models import UserGroup
+from models import EventRequest
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 MY_DATE_FORMATS = ['%d.%m.%Y',]
@@ -69,6 +70,13 @@ class EventForm(forms.ModelForm):
         exclude = ['status']
         #fields = '__all__'
 
+
+class EventRequestForm(forms.ModelForm):
+
+    class Meta:
+        model = EventRequest
+        #exclude = ['status']
+        fields = ['event_id', 'user_id', 'user_comment']
 
 
 class UserGroupForm(forms.ModelForm):

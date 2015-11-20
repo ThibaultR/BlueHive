@@ -1,5 +1,22 @@
 {% extends "BlueHive/base.html" %}
 
+{% block head %}
+<script type="text/javascript" charset="utf-8">
+
+    $(function() {
+
+        $(".click").editable("/user/events/edit_comment/", {
+            submitdata: { csrfmiddlewaretoken : "{{ csrf_token }}", _method: "post"},
+            select : true,
+            submit : 'OK',
+            cancel : 'cancel',
+            cssclass : "editable"
+        });
+
+
+    });
+</script>
+{% endblock %}
 
 {% block sidebar %}
 <ul>
@@ -15,16 +32,25 @@
 <h1>My Events</h1>
 
 {% for event_request in applied_events %}
-<h2>{{ event_request.event_id.name }} beginning at {{ event_request.event_id.begin_time }} with the status {{ event_request.status }} </a></h2>
+<p>{{ event_request.event_id.name }} ; {{ event_request.event_id.begin_time }} with the status {{ event_request.status }} and comment </p><p class="click" id="{{event_request.event_id.id }}">{{ event_request.user_comment }}</p>
 {% endfor %}
 
 
 <h1>New Events</h1>
 
 {% for event in new_events %}
-<h2>{{ event.name }} <a href="/user/events/{{ event.id }}/">apply now</a></h2>
-<h1>{{ event.title }}</h1>
+<form action="/user/events/{{ event.id }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="fieldWrapper">
+       {{ event.name }}  Comment: <input type="text" name="user_comment">
+        <input type="submit" value="Apply for event"/>
+        {{ form.email }}
+    </div>
+
+</form>
+
 
 {% endfor %}
+
+
 
 {% endblock %}

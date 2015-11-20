@@ -1,0 +1,43 @@
+{% extends "BlueHive/base.html" %}
+
+{% block sidebar %}
+<ul>
+    <li><a href="/event/overview">Event overview</a></li>
+    <li><a href="/event/add">add Event </a></li>
+    <li><a href="/superadmin/">Admin Backend</a></li>
+</ul>
+{% endblock %}
+
+{%  block content %}
+<h1>Newly registered users</h1>
+
+
+<h1>Activated users</h1>
+
+
+
+<h1>Deactivated users</h1>
+
+
+
+
+<!-- todo make edit button work -->
+{% for group in groups %}
+<p class="click" style="display: inline" id="{{ group.id }}">{{ group.value }}</p> <p style="display: inline"><a onclick="" href="">edit</a> <a href="/group/delete/{{ group.id }}/">delete</a></p> </br>
+
+{% endfor %}
+
+<h1>Add new group</h1>
+
+<form action="/group/add/" method="post">{% csrf_token %}
+    <ul>
+        {{ newusergroupform.as_ul }}
+    </ul>
+
+    <input type="submit" name="submit" value="Add UserGroup">
+</form>
+
+
+
+
+{% endblock %}

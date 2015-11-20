@@ -99,7 +99,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_altered = models.DateTimeField(auto_now=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=False)
     last_name = models.CharField(_('last name'), max_length=30, blank=False)
-    user_type = models.ForeignKey(UserType, default=1)
+    account_status = models.IntegerField(default= 0)
     user_group = models.ManyToManyField(UserGroup, default=1)
     rating = models.ForeignKey(UserRating, default=4)
     comment = models.CharField(max_length=254, blank=True)
