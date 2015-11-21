@@ -5,8 +5,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "value": "Freelancer",
-      "description": "every user is part of this group"
+      "value": "Freelancer"
     }
   },
   {
@@ -15,8 +14,7 @@
     "fields": {
       "date_created": "2015-11-11T17:41:28+00:00",
       "date_altered": "2015-11-11T17:41:28+00:00",
-      "value": "VIP",
-      "description": "only professional people are part of this group"
+      "value": "VIP"
     }
   },
   {

@@ -98,6 +98,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_altered = models.DateTimeField(auto_now=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=False)
     last_name = models.CharField(_('last name'), max_length=30, blank=False)
+    # alternative for easy picture upload http://www.lightbird.net/dbe/forum2.html
+    picture = models.ImageField()
     # -1 deactivated, 0 new user, 1 active user, 2 moderator, 3 administrator
     account_status = models.IntegerField(default= 0)
     user_group = models.ManyToManyField(UserGroup, default=1)
@@ -123,7 +125,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     language = models.ManyToManyField(Language,  null=True, blank=True)
     license = models.ManyToManyField(License,  null=True, blank=True)
     #https://coderwall.com/p/bz0sng/simple-django-image-upload-to-model-imagefield
-    image = models.ImageField(upload_to = 'user_pictures/', default = 'user_pictures/None/no-img.jpg')
 
 
     is_staff = models.BooleanField(_('staff status'), default=False,
@@ -164,6 +165,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):              # __unicode__ on Python 2
         return self.email
+
+class UploadFile(models.Model):
+    file = models.ImageField(upload_to='profile_pictures/%Y/%m/%d')
 
 class Event(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)

@@ -1,10 +1,45 @@
 {% extends "BlueHive/base.html" %}
 
 
+{% block head %}
+
+{% endblock %}
+
 {%  block content %}
 
     <h2>Register</h2>
+<script type="text/javascript">
+    // "myAwesomeDropzone" is the camelized version of the HTML element's ID
+    Dropzone.options.myAwesomeDropzone = {
+        paramName: "file", // The name that will be used to transfer the file
+        dictResponseError: "Your profile picture was not accepted from the server. Please use another one.",
+        dictDefaultMessage: "Drop your profile picture here",
+        acceptedFiles: "image/jpeg,image/png",
+        maxFilesize: 4, // MB
+        maxFiles: 1,
+        thumbnailWidth:"250",
+        thumbnailHeight:"250",
+        accept: function(file, done) {
+            console.log("uploaded");
+            done();
+        },
+        init: function() {
+            this.on("maxfilesexceeded", function(file) {
+                this.removeAllFiles();
+                this.addFile(file);
+            });
+            this.on("sending", function(file, xhr, formData) {
+                // Will send the filesize along with the file as POST data.
+                formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+            });
+        }
+    };
+
+</script>
+<form action="/user/register/picture/" class="dropzone"  id="my-awesome-dropzone"></form>
+
     <form action="/user/register/" method="post" enctype="multipart/form-data">{% csrf_token %}
+
 
         {{ form.non_field_errors }}
         <div class="fieldWrapper">

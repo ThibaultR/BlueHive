@@ -4,9 +4,9 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.contrib.auth import views
-from BlueHive.models import Event, UserGroup, EventRequest,CustomUser
+from BlueHive.models import Event, UserGroup, EventRequest,CustomUser,UploadFile
 from forms import EventForm, UserGroupForm
-from forms import CustomUserChangeForm, CustomUserCreationForm,EventRequestForm
+from forms import CustomUserChangeForm, CustomUserCreationForm,EventRequestForm, UploadFileForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import timezone
@@ -254,3 +254,19 @@ def admin_users(request):
     args['groups'] = UserGroup.objects.all()
 
     return render_to_response('BlueHive/admin/admin_users.html', args)
+
+def user_register_picture(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_file = UploadFile(file = request.FILES['file'])
+            new_file.save()
+
+            return HttpResponse(status=200)
+        else:
+            print 'error'
+            print form.errors
+            return HttpResponse(status=500)
+
+    print 'komisch'
+    return HttpResponseRedirect('/user/register/')
