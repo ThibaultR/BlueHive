@@ -6,6 +6,12 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 from django.core.urlresolvers import reverse
+from smartfields import fields
+from smartfields.dependencies import FileDependency
+from smartfields.processors import ImageProcessor
+import os
+import uuid
+from django.conf import settings
 
 class UserType(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
@@ -166,8 +172,37 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):              # __unicode__ on Python 2
         return self.email
 
+
+
+
+def make_upload_path(instance, filename):
+    file_root, file_ext = os.path.splitext(filename)
+    dir_name = 'pictures'
+    file_root = unicode(uuid.uuid4())
+    name = os.path.join(settings.MEDIA_ROOT, dir_name, file_root + file_ext.lower())
+
+
+    # Delete existing file to overwrite it later
+    '''if instance.pk:
+        while os.path.exists(name):
+            os.remove(name)'''
+
+    return os.path.join(dir_name, file_root + file_ext.lower())
+
+
+
+
+
+
 class UploadFile(models.Model):
-    file = models.ImageField(upload_to='profile_pictures/%Y/%m/%d')
+    #https://github.com/lehins/django-smartfields
+    file = fields.ImageField(dependencies=[FileDependency(processor=ImageProcessor(format='JPEG', scale={'max_width': 1000, 'max_height': 1000}))])
+
+    def save(self, *args, **kwargs):
+        for field in self._meta.fields:
+            if field.name == 'file':
+                field.upload_to = 'new_pictures/' + kwargs.pop('extra_param')
+        super(UploadFile, self).save(*args, **kwargs)
 
 class Event(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
@@ -206,6 +241,5 @@ class Author(models.Model):
 
     def get_absolute_url(self):
         return reverse('author-detail', kwargs={'pk': self.pk})
-
 
 

@@ -255,12 +255,13 @@ def admin_users(request):
 
     return render_to_response('BlueHive/admin/admin_users.html', args)
 
+
 def user_register_picture(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             new_file = UploadFile(file = request.FILES['file'])
-            new_file.save()
+            new_file.save(extra_param=request.META["CSRF_COOKIE"])
 
             return HttpResponse(status=200)
         else:
