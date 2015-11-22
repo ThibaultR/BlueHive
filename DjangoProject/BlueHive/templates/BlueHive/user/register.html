@@ -2,12 +2,6 @@
 
 
 {% block head %}
-
-{% endblock %}
-
-{%  block content %}
-
-    <h2>Register</h2>
 <script type="text/javascript">
     // "myAwesomeDropzone" is the camelized version of the HTML element's ID
     Dropzone.options.myAwesomeDropzone = {
@@ -36,7 +30,18 @@
     };
 
 </script>
+{% endblock %}
+
+{%  block content %}
+
+    <h2>Register</h2>
+
 <form action="/user/register/picture/" class="dropzone"  id="my-awesome-dropzone"></form>
+    {% if picturemissing %}
+    <h1>{{ picturemissing }}</h1>
+    {% endif %}
+
+
 
     <form action="/user/register/" method="post" enctype="multipart/form-data">{% csrf_token %}
 

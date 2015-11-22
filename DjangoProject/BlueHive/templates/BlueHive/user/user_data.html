@@ -1,9 +1,34 @@
 {% extends "BlueHive/base.html" %}
 
+{% block head %}
+<script type="text/javascript">
+    // "myAwesomeDropzone" is the camelized version of the HTML element's ID
+    Dropzone.options.myAwesomeDropzone = {
+        thumbnailWidth:"250",
+        thumbnailHeight:"250",
+        init: function() {
+            thisDropzone = this;
+            var postdata={
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            }
+            $.post('/user/data/profile_picture/',postdata, function(data) {
+                    var mockFile = { name: data.name, size: data.size };
+                    thisDropzone.options.addedfile.call(thisDropzone, mockFile);
+                    thisDropzone.createThumbnailFromUrl(mockFile, data.name);
+                    thisDropzone.emit("complete", mockFile);
+            });
+        }
+    };
+
+</script>
+{% endblock %}
+
 {%  block content %}
 
     <h2>Profile</h2>
+<!--<img border="0" alt="Profile Pic" src="{{ profile_picture }}" height="200" width="200"/>-->
 
+<form action="/user/register/picture/" class="dropzone"  id="my-awesome-dropzone"></form>
 
 <form action="/user/data/" method="post" enctype="multipart/form-data">{% csrf_token %}
 

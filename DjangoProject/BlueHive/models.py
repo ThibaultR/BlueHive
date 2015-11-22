@@ -105,7 +105,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_('first name'), max_length=30, blank=False)
     last_name = models.CharField(_('last name'), max_length=30, blank=False)
     # alternative for easy picture upload http://www.lightbird.net/dbe/forum2.html
-    picture = models.ImageField()
+    profile_picture = models.ImageField(default='dummy.jpg')
     # -1 deactivated, 0 new user, 1 active user, 2 moderator, 3 administrator
     account_status = models.IntegerField(default= 0)
     user_group = models.ManyToManyField(UserGroup, default=1)
@@ -173,36 +173,22 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-
-
-def make_upload_path(instance, filename):
-    file_root, file_ext = os.path.splitext(filename)
-    dir_name = 'pictures'
-    file_root = unicode(uuid.uuid4())
-    name = os.path.join(settings.MEDIA_ROOT, dir_name, file_root + file_ext.lower())
-
-
-    # Delete existing file to overwrite it later
-    '''if instance.pk:
-        while os.path.exists(name):
-            os.remove(name)'''
-
-    return os.path.join(dir_name, file_root + file_ext.lower())
-
-
-
-
-
-
-class UploadFile(models.Model):
+class NewProfilePicture(models.Model):
     #https://github.com/lehins/django-smartfields
     file = fields.ImageField(dependencies=[FileDependency(processor=ImageProcessor(format='JPEG', scale={'max_width': 1000, 'max_height': 1000}))])
+    csrftoken = models.CharField(max_length=254)
 
     def save(self, *args, **kwargs):
         for field in self._meta.fields:
             if field.name == 'file':
-                field.upload_to = 'new_pictures/' + kwargs.pop('extra_param')
-        super(UploadFile, self).save(*args, **kwargs)
+                path = settings.MEDIA_ROOT + '/new_pictures/' + kwargs.pop('extra_param')
+                print path
+                field.upload_to = path
+        super(NewProfilePicture, self).save(*args, **kwargs)
+
+
+    def __unicode__(self):
+        return unicode(self.file) or u''
 
 class Event(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
@@ -234,12 +220,3 @@ class EventRequest(models.Model):
     mail_sent = models.BooleanField(default = False)
 
     unique_together = ("event_id", "user_id")
-
-
-class Author(models.Model):
-    name = models.CharField(max_length=200)
-
-    def get_absolute_url(self):
-        return reverse('author-detail', kwargs={'pk': self.pk})
-
-

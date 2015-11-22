@@ -106,3 +106,6 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'BlueHive.CustomUser'
 LOGIN_URL='/'
 LOGIN_REDIRECT_URL='/'
+
+MEDIA_ROOT = '.'
+MEDIA_URL='/media/'

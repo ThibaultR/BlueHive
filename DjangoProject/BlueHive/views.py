@@ -4,19 +4,23 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.core.context_processors import csrf
 from django.contrib.auth import views
-from BlueHive.models import Event, UserGroup, EventRequest,CustomUser,UploadFile
+from BlueHive.models import Event, UserGroup, EventRequest,CustomUser,NewProfilePicture
 from forms import EventForm, UserGroupForm
-from forms import CustomUserChangeForm, CustomUserCreationForm,EventRequestForm, UploadFileForm
+from forms import CustomUserChangeForm, CustomUserCreationForm,EventRequestForm, NewProfilePictureForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import timezone
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic.edit import UpdateView
+from django.conf import settings
 from django.template import RequestContext
+# for changing csrf token
+from django.middleware.csrf import rotate_token
+import shutil, os
+from django.http import JsonResponse
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
-from models import Author
 
 # Create your views here.
 def handler404(request):
@@ -64,25 +68,81 @@ def user_register(request):
     if request.user.is_authenticated():
         auth.logout(request)
     if request.method == 'POST':
-        #form = CustomUserCreationForm(request.POST)
-        form = CustomUserCreationForm(request.POST, request.FILES)
+        #form = CustomUserCreationForm(request.POST, request.FILES)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            new_user = form.save(commit=False)
-            new_user.save()
-            default_group = UserGroup.objects.get(id=1)
-            new_user.user_group.add(default_group)
-            form.save_m2m()
+
+            #check if the image for the user is here
+            try:
+                profile_picture_old_path = NewProfilePicture.objects.get(csrftoken=request.META["CSRF_COOKIE"])
+                new_user = form.save(commit=False)
+                new_user.save()
+
+                # put the picture to the right place and save it for the user
+                basic_path = settings.MEDIA_ROOT + '/profile_pictures/'
+                profile_picture_new_path = basic_path + str(new_user.id) + '.jpg'
+                if not os.path.exists(basic_path):
+                    os.makedirs(basic_path)
+                shutil.copy2(str(profile_picture_old_path), profile_picture_new_path)
+
+                # delete the old folder containing the pictures of that user
+                shutil.rmtree(settings.MEDIA_ROOT + '/new_pictures/'+ request.META["CSRF_COOKIE"])
+
+                new_user.profile_picture = profile_picture_new_path
+                new_user.save()
+                default_group = UserGroup.objects.get(id=1)
+                new_user.user_group.add(default_group)
+                form.save_m2m()
+
+            except NewProfilePicture.DoesNotExist:
+                print 'There is no profile picture for this user'
+                return render(request, 'BlueHive/user/register.html', {'form': form, 'picturemissing': 'Please upload a profile picture!'})
+
+
+
             return HttpResponseRedirect('/user/register_success')
         else:
             #render_to_response('BlueHive/user/register.html', {'form': form})
             print form.errors #To see the form errors in the console.
             return render(request, 'BlueHive/user/register.html', {'form': form})
+    rotate_token(request)
     args = {}
     args.update(csrf(request))
 
     args['form'] = CustomUserCreationForm()
 
     return render_to_response('BlueHive/user/register.html', args)
+
+
+def user_register_picture(request):
+    if request.method == 'POST':
+        csrftoken = request.META["CSRF_COOKIE"]
+        request.POST['csrftoken'] = csrftoken
+        form = NewProfilePictureForm(request.POST, request.FILES)
+        if form.is_valid():
+            # check if there is already another picture of this csrftoken and delete it if yes
+            old_profile_pictures = NewProfilePicture.objects.filter(csrftoken=request.META["CSRF_COOKIE"])
+            if old_profile_pictures.count() > 0:
+                old_profile_pictures.delete()
+
+            new_file = NewProfilePicture(file=request.FILES['file'], csrftoken=csrftoken)
+            new_file.save(extra_param=csrftoken)
+            return HttpResponse(status=200)
+        else:
+            print form.errors
+            return HttpResponse(status=500)
+
+    return HttpResponseRedirect('/user/register/')
+
+@login_required
+def user_data_profile_picture(request):
+    if request.method == 'POST':
+        #TODO check validity
+        picture_path = '/media/' + str(CustomUser.objects.get(id=request.user.id).profile_picture)
+        picture_size = os.path.getsize(str(CustomUser.objects.get(id=request.user.id).profile_picture))
+        return JsonResponse({'name':picture_path, 'size':picture_size})
+
+
 
 
 
@@ -106,6 +166,7 @@ def user_data(request):
         args.update(csrf(request))
 
         args['form'] = form
+        args['profile_picture'] = '/media/' + str(CustomUser.objects.get(id=request.user.id).profile_picture)
 
         return render_to_response('BlueHive/user/user_data.html', args)
 
@@ -256,18 +317,4 @@ def admin_users(request):
     return render_to_response('BlueHive/admin/admin_users.html', args)
 
 
-def user_register_picture(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            new_file = UploadFile(file = request.FILES['file'])
-            new_file.save(extra_param=request.META["CSRF_COOKIE"])
 
-            return HttpResponse(status=200)
-        else:
-            print 'error'
-            print form.errors
-            return HttpResponse(status=500)
-
-    print 'komisch'
-    return HttpResponseRedirect('/user/register/')

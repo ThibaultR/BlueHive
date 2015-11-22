@@ -5,7 +5,7 @@ from models import CustomUser
 from models import Event
 from models import UserGroup
 from models import EventRequest
-from models import UploadFile
+from models import NewProfilePicture
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 MY_DATE_FORMATS = ['%d.%m.%Y',]
@@ -26,7 +26,7 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'phone_number', 'birth_date', 'social_security_number', 'address', 'zip_code',
-                  'city', 'nationality', 'education', 'job_position', 'work_experience', 'language', 'license', 'picture']
+                  'city', 'nationality', 'education', 'job_position', 'work_experience', 'language', 'license', 'profile_picture']
         widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple, 'birth_date': forms.DateInput()}
 
 
@@ -90,10 +90,10 @@ class UserGroupForm(forms.ModelForm):
         model = UserGroup
         fields = '__all__'
 
-class UploadFileForm(forms.ModelForm):
+class NewProfilePictureForm(forms.ModelForm):
 
     class Meta:
-        model = UploadFile
+        model = NewProfilePicture
         fields = '__all__'
 
 
