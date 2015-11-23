@@ -94,6 +94,6 @@ class NewProfilePictureForm(forms.ModelForm):
 
     class Meta:
         model = NewProfilePicture
-        fields = '__all__'
+        exclude = ['user_id']
 
 

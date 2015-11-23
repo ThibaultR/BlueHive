@@ -1655,6 +1655,7 @@
     canvas.height = ih;
     ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0);
+    //img.src = ""; //here malle
     data = ctx.getImageData(0, 0, 1, ih).data;
     sy = 0;
     ey = ih;

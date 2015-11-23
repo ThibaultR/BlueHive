@@ -177,12 +177,12 @@ class NewProfilePicture(models.Model):
     #https://github.com/lehins/django-smartfields
     file = fields.ImageField(dependencies=[FileDependency(processor=ImageProcessor(format='JPEG', scale={'max_width': 1000, 'max_height': 1000}))])
     csrftoken = models.CharField(max_length=254)
+    user_id = fields.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         for field in self._meta.fields:
             if field.name == 'file':
                 path = settings.MEDIA_ROOT + '/new_pictures/' + kwargs.pop('extra_param')
-                print path
                 field.upload_to = path
         super(NewProfilePicture, self).save(*args, **kwargs)
 

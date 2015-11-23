@@ -18,6 +18,9 @@ from django.template import RequestContext
 from django.middleware.csrf import rotate_token
 import shutil, os
 from django.http import JsonResponse
+import random
+
+
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
@@ -114,35 +117,73 @@ def user_register(request):
     return render_to_response('BlueHive/user/register.html', args)
 
 
-def user_register_picture(request):
+def user_data_set_profile_picture(request):
     if request.method == 'POST':
         csrftoken = request.META["CSRF_COOKIE"]
         request.POST['csrftoken'] = csrftoken
         form = NewProfilePictureForm(request.POST, request.FILES)
         if form.is_valid():
-            # check if there is already another picture of this csrftoken and delete it if yes
-            old_profile_pictures = NewProfilePicture.objects.filter(csrftoken=request.META["CSRF_COOKIE"])
-            if old_profile_pictures.count() > 0:
-                old_profile_pictures.delete()
+            # when the picture comes from a already registered user
+            if request.user.id:
+                # check if there is already another picture of this csrftoken and delete it if yes
+                old_profile_pictures = NewProfilePicture.objects.filter(user_id=request.user.id)
+                if old_profile_pictures.count() > 0:
+                    old_profile_pictures.delete()
 
-            new_file = NewProfilePicture(file=request.FILES['file'], csrftoken=csrftoken)
-            new_file.save(extra_param=csrftoken)
-            return HttpResponse(status=200)
+                new_file = NewProfilePicture(file=request.FILES['file'], csrftoken=csrftoken, user_id=request.user.id)
+                new_file.save(extra_param=csrftoken)
+
+                #now set the new picture as actual picture
+                profile_picture_old_path = NewProfilePicture.objects.get(user_id=request.user.id)
+
+                # put the picture to the right place and save it for the user
+                basic_path = settings.MEDIA_ROOT + '/profile_pictures/'
+                profile_picture_new_path = basic_path + str(request.user.id) + '.jpg'
+                if not os.path.exists(basic_path):
+                    os.makedirs(basic_path)
+                shutil.copy2(str(profile_picture_old_path), profile_picture_new_path)
+
+                # delete the old folder containing the pictures of that user
+                shutil.rmtree(settings.MEDIA_ROOT + '/new_pictures/'+ request.META["CSRF_COOKIE"])
+
+                actUser = CustomUser.objects.get(id=request.user.id)
+                actUser.profile_picture = profile_picture_new_path
+                actUser.save()
+
+                return HttpResponse(status=200)
+
+            else:
+                # check if there is already another picture of this csrftoken and delete it if yes
+                old_profile_pictures = NewProfilePicture.objects.filter(csrftoken=request.META["CSRF_COOKIE"])
+                if old_profile_pictures.count() > 0:
+                    old_profile_pictures.delete()
+
+                new_file = NewProfilePicture(file=request.FILES['file'], csrftoken=csrftoken)
+                new_file.save(extra_param=csrftoken)
+                return HttpResponse(status=200)
+
+
+
+
+
         else:
             print form.errors
             return HttpResponse(status=500)
 
+
+
     return HttpResponseRedirect('/user/register/')
 
 @login_required
-def user_data_profile_picture(request):
+def user_data_get_profile_picture(request):
     if request.method == 'POST':
+        # lot of help from http://stackoverflow.com/questions/18048825/how-to-limit-the-number-of-dropzone-js-files-uploaded?rq=1
         #TODO check validity
         picture_path = '/media/' + str(CustomUser.objects.get(id=request.user.id).profile_picture)
         picture_size = os.path.getsize(str(CustomUser.objects.get(id=request.user.id).profile_picture))
         return JsonResponse({'name':picture_path, 'size':picture_size})
 
-
+    return HttpResponseRedirect('/user/data/')
 
 
 
@@ -165,6 +206,7 @@ def user_data(request):
         args = {}
         args.update(csrf(request))
 
+        randomNumber = random.randint(1,1000) # returns a random integer
         args['form'] = form
         args['profile_picture'] = '/media/' + str(CustomUser.objects.get(id=request.user.id).profile_picture)
 

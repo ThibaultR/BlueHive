@@ -2,25 +2,47 @@
 
 {% block head %}
 <script type="text/javascript">
-    // "myAwesomeDropzone" is the camelized version of the HTML element's ID
+    $.removeData('data/image')
     Dropzone.options.myAwesomeDropzone = {
+        paramName: "file", // The name that will be used to transfer the file
+        dictResponseError: "Your profile picture was not accepted from the server. Please use another one.",
+        dictDefaultMessage: "Drop your profile picture here",
+        acceptedFiles: "image/jpeg,image/png",
+        maxFilesize: 4, // MB
+        maxFiles: 1,
         thumbnailWidth:"250",
         thumbnailHeight:"250",
+        accept: function(file, done) {
+            done();
+        },
         init: function() {
+
             thisDropzone = this;
-            var postdata={
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            }
-            $.post('/user/data/profile_picture/',postdata, function(data) {
-                    var mockFile = { name: data.name, size: data.size };
-                    thisDropzone.options.addedfile.call(thisDropzone, mockFile);
-                    thisDropzone.createThumbnailFromUrl(mockFile, data.name);
-                    thisDropzone.emit("complete", mockFile);
+            this.on("addedfile", function() {
+               if (this.files[1] != null) {
+                    this.removeFile(this.files[0]);
+                }
+            });
+            thisDropzone.on("sending", function(file, xhr, formData) {
+                // Will send the filesize along with the file as POST data.
+                formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+            });
+            var postdata={'csrfmiddlewaretoken': '{{ csrf_token }}'}
+            $.post('/user/data/get_profile_picture/',postdata, function(data) {
+                var mockFile = { name: data.name, size: data.size };
+                thisDropzone.emit("addedfile", mockFile);
+                //let Dropzone download image and resize it
+                thisDropzone.createThumbnailFromUrl(mockFile, data.name);
+                // Make sure that there is no progress bar, etc...
+                thisDropzone.emit("complete", mockFile);
+                thisDropzone.files.push(mockFile);
+
             });
         }
     };
 
 </script>
+
 {% endblock %}
 
 {%  block content %}
@@ -28,7 +50,7 @@
     <h2>Profile</h2>
 <!--<img border="0" alt="Profile Pic" src="{{ profile_picture }}" height="200" width="200"/>-->
 
-<form action="/user/register/picture/" class="dropzone"  id="my-awesome-dropzone"></form>
+<form action="/user/data/set_profile_picture/" class="dropzone"  id="my-awesome-dropzone"></form>
 
 <form action="/user/data/" method="post" enctype="multipart/form-data">{% csrf_token %}
 
