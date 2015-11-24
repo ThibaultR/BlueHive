@@ -5,36 +5,52 @@
 {%  block content %}
 <h1>Newly registered users</h1>
 {% for user in new_users %}
-<p>{{ user.last_name }} {{ user.first_name }}  {{ user.city }} activate delete</p>
+<form action="/admin/users/status/" method="post">{% csrf_token %}
+    <div class="fieldWrapper">
+        <label for="LastName">{{ user.last_name }}</label>
+        <label for="FirstName">{{ user.first_name }}</label>
+        <label for="UserCity">{{ user.city }}</label>
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <input type="submit" name="value" value="show">
+        <input type="submit" name="value" value="activate">
+        <input type="submit" name="value" value="delete">
+    </div>
+</form>
 
 {% endfor %}
 
 <h1>Activated users</h1>
-
-
-
-<h1>Deactivated users</h1>
-
-
-
-
-<!-- todo make edit button work -->
-{% for group in groups %}
-<p class="click" style="display: inline" id="{{ group.id }}">{{ group.value }}</p> <p style="display: inline"><a onclick="" href="">edit</a> <a href="/group/delete/{{ group.id }}/">delete</a></p> </br>
+{% for user in active_users %}
+<form action="/admin/users/status/" method="post">{% csrf_token %}
+    <div class="fieldWrapper">
+        <label for="LastName">{{ user.last_name }}</label>
+        <label for="FirstName">{{ user.first_name }}</label>
+        <label for="UserCity">{{ user.city }}</label>
+        <label for="UserRating">{{ user.rating.value }}</label>
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <input type="submit" name="value" value="edit">
+        <input type="submit" name="value" value="deactivate">
+    </div>
+</form>
 
 {% endfor %}
 
-<h1>Add new group</h1>
 
-<form action="/group/add/" method="post">{% csrf_token %}
-    <ul>
-        {{ newusergroupform.as_ul }}
-    </ul>
-
-    <input type="submit" name="submit" value="Add UserGroup">
+<h1>Deactivated users</h1>
+{% for user in deactivated_users %}
+<form action="/admin/users/status/" method="post">{% csrf_token %}
+    <div class="fieldWrapper">
+        <label for="LastName">{{ user.last_name }}</label>
+        <label for="FirstName">{{ user.first_name }}</label>
+        <label for="UserCity">{{ user.city }}</label>
+        <label for="UserRating">{{ user.rating.value }}</label>
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <input type="submit" name="value" value="edit">
+        <input type="submit" name="value" value="activate">
+    </div>
 </form>
 
-
+{% endfor %}
 
 
 {% endblock %}

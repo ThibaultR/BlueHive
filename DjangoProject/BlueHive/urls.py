@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^user/auth/', 'BlueHive.views.user_auth', name='user_auth'),
     url(r'^user/logout/', 'BlueHive.views.user_logout', name='user_logout'),
     url(r'^user/invalid/', 'BlueHive.views.user_invalid_login', name='user_invalid_login'),
-    url(r'^user/data/set_profile_picture/$', 'BlueHive.views.user_data_set_profile_picture', name='user_data_set_profile_picture'),
+    url(r'^user/data/set_profile_picture/(?P<user_id>\d+)/$', 'BlueHive.views.user_data_set_profile_picture', name='user_data_set_profile_picture'),
     url(r'^user/register/$', 'BlueHive.views.user_register', name='user_register'),
     url(r'^user/register_success/$', 'BlueHive.views.user_register_success', name='user_register_success'),
     url(r'^user/data/$', 'BlueHive.views.user_data', name='user_data'),
@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^group/add/$', 'BlueHive.views.group_add', name='group_add'),
     url(r'^group/edit/$', 'BlueHive.views.group_edit', name='group_edit'),
     url(r'^admin/users/$', 'BlueHive.views.admin_users', name='admin_users'),
+    url(r'^admin/users/status/$', 'BlueHive.views.admin_users_status', name='admin_users_status'),
+    url(r'^admin/users/edit/(?P<user_id>\d+)/$', 'BlueHive.views.admin_users_edit', name='admin_users_edit'),
 
     url(r'^group/delete/(?P<group_id>\d+)/$', 'BlueHive.views.group_delete', name='group_delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

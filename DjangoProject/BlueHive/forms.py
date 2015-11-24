@@ -64,6 +64,39 @@ class CustomUserChangeForm(UserChangeForm):
         return self.initial["password"]
 
 
+class AdminCustomUserChangeForm(UserChangeForm):
+
+    """A form for updating users.
+    Includes all the fields on the user, but replaces the password field
+    with admin's password hash display field.
+    """
+
+    password = ReadOnlyPasswordHashField(label="Password", help_text=(
+        "Raw passwords are not stored, so there is no way to see "
+        "this user's password, but you can change the password "
+        "using <a href=\"password/\">this form</a>."))
+
+    class Meta:
+        model = CustomUser
+        exclude = ['date_created', 'user_type', 'passport_issue_date', 'passport_expiration_date', 'account_status']
+        widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple, 'birth_date': forms.DateInput, 'user_group':  forms.CheckboxSelectMultiple}
+
+
+    def __init__(self, *args, **kwargs):
+        """Init the form."""
+        super(AdminCustomUserChangeForm, self).__init__(*args, **kwargs)
+
+
+    def clean_password(self):
+        """Clean password.
+        Regardless of what the user provides, return the initial value.
+        This is done here, rather than on the field, because the
+        field does not have access to the initial value.
+        :return str password:
+        """
+        return self.initial["password"]
+
+
 class EventForm(forms.ModelForm):
 
     class Meta:

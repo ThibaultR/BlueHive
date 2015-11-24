@@ -6,7 +6,7 @@ from django.core.context_processors import csrf
 from django.contrib.auth import views
 from BlueHive.models import Event, UserGroup, EventRequest,CustomUser,NewProfilePicture
 from forms import EventForm, UserGroupForm
-from forms import CustomUserChangeForm, CustomUserCreationForm,EventRequestForm, NewProfilePictureForm
+from forms import CustomUserChangeForm, CustomUserCreationForm,EventRequestForm, NewProfilePictureForm, AdminCustomUserChangeForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.utils import timezone
@@ -18,7 +18,6 @@ from django.template import RequestContext
 from django.middleware.csrf import rotate_token
 import shutil, os
 from django.http import JsonResponse
-import random
 
 
 
@@ -117,12 +116,14 @@ def user_register(request):
     return render_to_response('BlueHive/user/register.html', args)
 
 
-def user_data_set_profile_picture(request):
+def user_data_set_profile_picture(request, user_id):
     if request.method == 'POST':
         csrftoken = request.META["CSRF_COOKIE"]
         request.POST['csrftoken'] = csrftoken
         form = NewProfilePictureForm(request.POST, request.FILES)
         if form.is_valid():
+            # check if the request comes from the admin
+            # TODO continue here
             # when the picture comes from a already registered user
             if request.user.id:
                 # check if there is already another picture of this csrftoken and delete it if yes
@@ -161,10 +162,6 @@ def user_data_set_profile_picture(request):
                 new_file = NewProfilePicture(file=request.FILES['file'], csrftoken=csrftoken)
                 new_file.save(extra_param=csrftoken)
                 return HttpResponse(status=200)
-
-
-
-
 
         else:
             print form.errors
@@ -206,9 +203,7 @@ def user_data(request):
         args = {}
         args.update(csrf(request))
 
-        randomNumber = random.randint(1,1000) # returns a random integer
         args['form'] = form
-        args['profile_picture'] = '/media/' + str(CustomUser.objects.get(id=request.user.id).profile_picture)
 
         return render_to_response('BlueHive/user/user_data.html', args)
 
@@ -354,9 +349,61 @@ def admin_users(request):
     args = {}
     args.update(csrf(request))
     args['new_users'] = CustomUser.objects.filter(account_status=0)
-    args['groups'] = UserGroup.objects.all()
+    args['active_users'] = CustomUser.objects.filter(account_status=1)
+    args['deactivated_users'] = CustomUser.objects.filter(account_status=-1)
 
     return render_to_response('BlueHive/admin/admin_users.html', args)
 
 
+def admin_users_status(request):
+    if request.POST:
+        value = request.POST.get('value')
+        user_id = request.POST.get('user_id')
+        actUser = get_object_or_404(CustomUser, pk=user_id)
+        if value == 'activate':
+            # activate this user when his actual account_status == 0
+            if actUser.account_status == 0 or actUser.account_status == -1:
+                actUser.account_status = 1
+                actUser.save()
+                return HttpResponseRedirect('/admin/users/')
+        elif value == 'deactivate':
+            # delete this user when his actual account_status == 0
+            if actUser.account_status == 1:
+                actUser.account_status = -1
+                actUser.save()
+                return HttpResponseRedirect('/admin/users/')
+        elif value == 'delete':
+            # delete this user when his actual account_status == 0
+            if actUser.account_status == 0:
+                actUser.delete()
+                return HttpResponseRedirect('/admin/users/')
+        elif value == 'edit':
+            # edit this user when his actual account_status != 0
+            if actUser.account_status != 0:
+                return HttpResponseRedirect('/admin/users/edit/' + user_id)
+        elif value == 'show':
+            if actUser.account_status < 2:
+                return HttpResponseRedirect('/admin/users/edit/' + user_id)
 
+    return HttpResponseRedirect('/admin/users/')
+
+
+def admin_users_edit(request, user_id):
+    if request.method == 'POST':
+        form = AdminCustomUserChangeForm(request.POST, request.FILES, instance=get_object_or_404(CustomUser, pk=user_id))
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/admin/users/')
+        else:
+            print form.errors
+            return render(request, 'BlueHive/admin/admin_users_edit.html', {'form': form})
+    else:
+        form = AdminCustomUserChangeForm(instance=get_object_or_404(CustomUser, pk=user_id))
+        args = {}
+        args.update(csrf(request))
+
+        args['form'] = form
+        args['user_id'] = user_id
+
+
+    return render_to_response('BlueHive/admin/admin_users_edit.html', args)

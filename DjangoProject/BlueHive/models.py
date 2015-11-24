@@ -25,6 +25,9 @@ class UserRating(models.Model):
     value = models.IntegerField(default=0)
     description = models.CharField(max_length=254, blank=True)
 
+    def __unicode__(self):
+        return unicode(self.value)
+
 class Nationality(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_altered = models.DateTimeField(auto_now=True)

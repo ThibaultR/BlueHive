@@ -19,7 +19,7 @@
 
             thisDropzone = this;
             this.on("addedfile", function() {
-               if (this.files[1] != null) {
+                if (this.files[1] != null) {
                     this.removeFile(this.files[0]);
                 }
             });
@@ -47,14 +47,23 @@
 
 {%  block content %}
 
-    <h2>Profile</h2>
-<!--<img border="0" alt="Profile Pic" src="{{ profile_picture }}" height="200" width="200"/>-->
+<h2>Profile</h2>
 
-<form action="/user/data/set_profile_picture/0/" class="dropzone"  id="my-awesome-dropzone"></form>
+<form action="/user/data/set_profile_picture/{{ user_id }}/" class="dropzone"  id="my-awesome-dropzone"></form>
 
-<form action="/user/data/" method="post" enctype="multipart/form-data">{% csrf_token %}
+<form action="/admin/users/edit/{{ user_id }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
 
     {{ form.non_field_errors }}
+    <div class="fieldWrapper">
+        {{ form.user_group.errors }}
+        <label for="{{ form.user_group.id_for_label }}">{{ form.user_group.label_tag }}</label>
+        {{ form.user_group }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.rating.errors }}
+        <label for="{{ form.rating.id_for_label }}">{{ form.rating.label_tag }}</label>
+        {{ form.rating }}
+    </div>
     <div class="fieldWrapper">
         {{ form.email.errors }}
         <label for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
@@ -152,6 +161,6 @@
 
     <input type="submit" value="Update" />
 
-    </form>
+</form>
 
 {% endblock %}
