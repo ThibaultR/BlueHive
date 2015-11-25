@@ -1,8 +1,10 @@
-{% extends "BlueHive/base.html" %}
+{% extends "BlueHive/base_admin.html" %}
+{% block title %}Manage Users{% endblock %}
 
 
 
 {%  block content %}
+
 <h1>Newly registered users</h1>
 {% for user in new_users %}
 <form action="/admin/users/status/" method="post">{% csrf_token %}

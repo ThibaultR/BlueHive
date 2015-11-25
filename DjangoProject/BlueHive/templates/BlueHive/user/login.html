@@ -1,15 +1,13 @@
 {% extends "BlueHive/base.html" %}
+{% block title %}BlueHive Login{% endblock %}
 
 
 {%  block content %}
+<h1>{{ message }}</h1>
 
-    {%  if form.errors %}
-    <p class="error">Sorry, that's not a valid username or password</p>
-    {% endif %}
-
-    <form action="/user/auth/" method="post">{% csrf_token %}
-        <label for="username">User name:</label>
-        <input type="text" name="username" value="" id="username">
+    <form action="/user/login/" method="post">{% csrf_token %}
+        <label for="username">E-mail address:</label>
+        <input type="text" name="email" value="" id="username">
         <label for="password">Password:</label>
         <input type="password" name="password" value="" id="password">
 
@@ -17,4 +15,6 @@
 
     </form>
 
+<h1>Are you new here?</h1>
+<h2><a href="{% url 'BlueHive:user_register' %}">Register now!</a></h2>
 {% endblock %}

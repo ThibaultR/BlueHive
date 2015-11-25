@@ -1,4 +1,6 @@
-{% extends "BlueHive/base.html" %}
+{% extends "BlueHive/base_admin.html" %}
+{% block title %}Edit a user{% endblock %}
+
 
 {% block head %}
 <script type="text/javascript">
@@ -28,7 +30,7 @@
                 formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
             });
             var postdata={'csrfmiddlewaretoken': '{{ csrf_token }}'}
-            $.post('/user/data/get_profile_picture/',postdata, function(data) {
+            $.post('/user/data/get_profile_picture/{{ user_id }}/',postdata, function(data) {
                 var mockFile = { name: data.name, size: data.size };
                 thisDropzone.emit("addedfile", mockFile);
                 //let Dropzone download image and resize it
@@ -54,6 +56,16 @@
 <form action="/admin/users/edit/{{ user_id }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
 
     {{ form.non_field_errors }}
+    <div class="fieldWrapper">
+        {{ password_form.new_password1.errors }}
+        <label for="{{ password_form.new_password1.id_for_label }}">{{ password_form.new_password1.label_tag }}</label>
+        {{ password_form.new_password1 }}
+    </div>
+    <div class="fieldWrapper">
+        {{ password_form.new_password2.errors }}
+        <label for="{{ password_form.new_password2.id_for_label }}">{{password_form.new_password2.label_tag }}</label>
+        {{ password_form.new_password2 }}
+    </div>
     <div class="fieldWrapper">
         {{ form.user_group.errors }}
         <label for="{{ form.user_group.id_for_label }}">{{ form.user_group.label_tag }}</label>

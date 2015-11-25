@@ -1,18 +1,30 @@
-{% extends "BlueHive/base.html" %}
+{% extends "BlueHive/base_admin.html" %}
 
+{% block title %}Event Overview{% endblock %}
 
 
 
 {%  block content %}
-<h1>Events</h1>
+<h1>Event Overview</h1>
     {%  if form.errors %}
     <p class="error">Sorry, that's not a valid username or password</p>
     {% endif %}
 
     {% for event in events %}
-    <h2><a href="/event/{{ event.id }}/">{{ event.name }}</a></h2>
-    <h1>{{ event.title }}</h1>
-
+    <div class="adminevent">
+        <div class="fieldWrapper">
+            <label for="EventName">{{ event.name }}</label>
+            <label for="Location">{{ event.location }}</label>
+            <label for="Date">{{ event.begin_time|date:"d.m.Y"|lower }}</label>
+            <label for="Time">{{ event.begin_time|date:"H:i"|lower }} - {{ event.end_time }}</label>
+        </div>
+        <div class="fieldWrapper">
+            <label for="EditEvent"><a href="{% url 'BlueHive:event_edit' %}">edit event</a></label>
+            <label for="KillEvent"><a href="{% url 'BlueHive:event_deactivate' %}">deactivate event</a></label>
+            <label for="AppliedUsers">10 Users applied</label>
+            <label for="AcceptedUsers">5 Users acctepted</label>
+        </div>
+    </div>
     {% endfor %}
 
 {% endblock %}

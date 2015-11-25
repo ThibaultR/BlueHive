@@ -109,7 +109,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(_('last name'), max_length=30, blank=False)
     # alternative for easy picture upload http://www.lightbird.net/dbe/forum2.html
     profile_picture = models.ImageField(default='dummy.jpg')
-    # -1 deactivated, 0 new user, 1 active user, 2 moderator, 3 administrator
+    # -1 deactivated, 0 new user, 1 active user, 2 moderator
     account_status = models.IntegerField(default= 0)
     user_group = models.ManyToManyField(UserGroup, default=1)
     rating = models.ForeignKey(UserRating, default=4)

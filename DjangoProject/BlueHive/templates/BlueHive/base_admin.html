@@ -3,7 +3,6 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="{% static 'favicon.png' %}"/>
     <title>{% block title %}My Base Template {% endblock %}</title>
     <script src="{% static "BlueHive/jquery.min.js" %}" type="text/javascript"> </script>
     <script src="{% static "BlueHive/jquery.jeditable.mini.js" %}" type="text/javascript"> </script>
@@ -20,6 +19,21 @@
 
 
     <div id="page">
+
+            <div id="sidebar">
+            {% block sidebar %}
+
+    <ul>
+            <li>Admin</li>
+            <li><a href="{% url 'BlueHive:user_logout' %}">Logout</a></li>
+            <li><a href="{% url 'BlueHive:event_overview' %}">Events</a></li>
+            <li><a href="{% url 'BlueHive:event_add' %}">Add Event</a></li>
+            <li><a href="{% url 'BlueHive:admin_users' %}">User management</a></li>
+            <li><a href="{% url 'BlueHive:group_overview' %}">Group Management</a></li>
+
+    </ul>
+    {% endblock %}
+    </div>
 
 
     <div id="content">

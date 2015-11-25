@@ -1,4 +1,5 @@
-{% extends "BlueHive/base.html" %}
+{% extends "BlueHive/base_user.html" %}
+{% block title %}Change your data{% endblock %}
 
 {% block head %}
 <script type="text/javascript">
@@ -28,7 +29,7 @@
                 formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
             });
             var postdata={'csrfmiddlewaretoken': '{{ csrf_token }}'}
-            $.post('/user/data/get_profile_picture/',postdata, function(data) {
+            $.post('/user/data/get_profile_picture/0/',postdata, function(data) {
                 var mockFile = { name: data.name, size: data.size };
                 thisDropzone.emit("addedfile", mockFile);
                 //let Dropzone download image and resize it
@@ -56,19 +57,19 @@
 
     {{ form.non_field_errors }}
     <div class="fieldWrapper">
-        {{ form.email.errors }}
-        <label for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
-        {{ form.email }}
+        {{ password_form.old_password.errors }}
+        <label for="{{ password_form.old_password.id_for_label }}">{{ password_form.old_password.label_tag }}</label>
+        {{ password_form.old_password }}
     </div>
     <div class="fieldWrapper">
-        {{ form.password1.errors }}
-        <label for="{{ form.password1.id_for_label }}">{{ form.password1.label_tag }}</label>
-        {{ form.password1 }}
+        {{ password_form.new_password1.errors }}
+        <label for="{{ password_form.new_password1.id_for_label }}">{{ password_form.new_password1.label_tag }}</label>
+        {{ password_form.new_password1 }}
     </div>
     <div class="fieldWrapper">
-        {{ form.password2.errors }}
-        <label for="{{ form.password2.id_for_label }}">{{ form.password2.label_tag }}</label>
-        {{ form.password2 }}
+        {{ password_form.new_password2.errors }}
+        <label for="{{ password_form.new_password2.id_for_label }}">{{password_form.new_password2.label_tag }}</label>
+        {{ password_form.new_password2 }}
     </div>
     <div class="fieldWrapper">
         {{ form.first_name.errors }}
