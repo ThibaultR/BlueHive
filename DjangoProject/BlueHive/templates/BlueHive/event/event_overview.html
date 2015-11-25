@@ -2,13 +2,8 @@
 
 {% block title %}Event Overview{% endblock %}
 
-
-
 {%  block content %}
 <h1>Event Overview</h1>
-    {%  if form.errors %}
-    <p class="error">Sorry, that's not a valid username or password</p>
-    {% endif %}
 
     {% for event in events %}
     <div class="adminevent">
@@ -19,11 +14,30 @@
             <label for="Time">{{ event.begin_time|date:"H:i"|lower }} - {{ event.end_time }}</label>
         </div>
         <div class="fieldWrapper">
-            <label for="EditEvent"><a href="{% url 'BlueHive:event_edit' %}">edit event</a></label>
-            <label for="KillEvent"><a href="{% url 'BlueHive:event_deactivate' %}">deactivate event</a></label>
-            <label for="AppliedUsers">10 Users applied</label>
-            <label for="AcceptedUsers">5 Users acctepted</label>
+            <label for="AppliedUsers">X Users applied</label>
+            <label for="AcceptedUsers">Y Users acctepted</label>
+            <label for="EditEvent"><a href ="{% url 'BlueHive:event_edit' event.id %} ">Edit Event</a></label>
+            <form action="{% url 'BlueHive:event_status' %}" method="post" style="display: inline;">{% csrf_token %}
+                <input type="hidden" name="event_id" value="{{ event.id }}">
+                <input type="submit" name="value" value="deactivate">
+            </form>
         </div>
+        <p>Users who applied</p>
+        <form action="{% url 'BlueHive:event_overview' %}" method="post" style="display: inline;">{% csrf_token %}
+            <input type="hidden" name="event_id" value="{{ event.id }}">
+            {% for event_request in event.get_event_requests %}
+                <div class="fieldWrapper">
+                    <label for="Name">{{ event_request.user_id.first_name }} {{ event_request.user_id.last_name }}</label>
+                    <label for="Comment">{{ event_request.user_comment }}</label>
+                    <label for="Rating">{{ event_request.user_id.rating }} stars</label>
+                    <input type="radio" name="userid_{{ event_request.user_id.id }}" value="rejected" {% if event_request.status == -1 %} checked {% endif %}> rejected
+                    <input type="radio" name="userid_{{ event_request.user_id.id }}" value="waiting" {% if event_request.status == 0 %} checked {% endif %}> waiting
+                    <input type="radio" name="userid_{{ event_request.user_id.id }}" value="accepted" {% if event_request.status == 1 %} checked {% endif %}> accepted
+                </div>
+            {% endfor %}
+            <input type="submit" name="value" value="Apply Changes">
+        </form>
+
     </div>
     {% endfor %}
 

@@ -6,7 +6,7 @@
 
 {%  block content %}
 
-<form action="/event/add/"method="post">{% csrf_token %}
+<form action="{% url 'BlueHive:event_add' %}"method="post">{% csrf_token %}
 <ul>
     {{ form.as_ul }}
 </ul>

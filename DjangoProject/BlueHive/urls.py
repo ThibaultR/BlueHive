@@ -1,9 +1,7 @@
 from django.conf.urls import url, include
 from django.conf import settings
 from django.conf.urls.static import static
-from . import views
-from django.conf.urls import (handler400, handler403, handler404, handler500)
-from django.core.urlresolvers import reverse
+
 urlpatterns = [
     url(r'^$', 'BlueHive.views.user_login'),
     url(r'^user/login/$', 'BlueHive.views.user_login', name='user_login'),
@@ -19,7 +17,8 @@ urlpatterns = [
     url(r'^user/events/(?P<event_id>\d+)/$', 'BlueHive.views.user_events_apply', name='user_events_apply'),
     url(r'^event/overview/$', 'BlueHive.views.event_overview', name='event_overview'),
     url(r'^event/add/$', 'BlueHive.views.event_add', name='event_add'),
-    url(r'^event/edit/$', 'BlueHive.views.event_edit', name='event_edit'),
+    url(r'^event/edit/(?P<event_id>\d+)/$', 'BlueHive.views.event_edit', name='event_edit'),
+    url(r'^event/status/$', 'BlueHive.views.event_status', name='event_status'),
     url(r'^event/deactivate/$', 'BlueHive.views.event_deactivate', name='event_deactivate'),
     url(r'^group/$', 'BlueHive.views.group_overview', name='group_overview'),
     url(r'^group/overview/$', 'BlueHive.views.group_overview', name='group_overview2'),
@@ -31,8 +30,3 @@ urlpatterns = [
 
     url(r'^group/delete/(?P<group_id>\d+)/$', 'BlueHive.views.group_delete', name='group_delete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-#handler404 = 'views.page_not_found'
-
-#handler400 = 'views.bad_request'
-#handler403 = 'views.permission_denied'
-#handler500 = 'views.server_error'

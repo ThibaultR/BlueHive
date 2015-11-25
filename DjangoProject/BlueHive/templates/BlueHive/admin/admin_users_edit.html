@@ -30,7 +30,7 @@
                 formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
             });
             var postdata={'csrfmiddlewaretoken': '{{ csrf_token }}'}
-            $.post('/user/data/get_profile_picture/{{ user_id }}/',postdata, function(data) {
+            $.post("{% url 'BlueHive:user_data_get_profile_picture' user_id %}",postdata, function(data) {
                 var mockFile = { name: data.name, size: data.size };
                 thisDropzone.emit("addedfile", mockFile);
                 //let Dropzone download image and resize it
@@ -51,9 +51,9 @@
 
 <h2>Profile</h2>
 
-<form action="/user/data/set_profile_picture/{{ user_id }}/" class="dropzone"  id="my-awesome-dropzone"></form>
+<form action="{% url 'BlueHive:user_data_set_profile_picture' user_id %}" class="dropzone"  id="my-awesome-dropzone"></form>
 
-<form action="/admin/users/edit/{{ user_id }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
+<form action="{% url 'BlueHive:admin_users_edit' user_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
 
     {{ form.non_field_errors }}
     <div class="fieldWrapper">

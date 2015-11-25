@@ -7,7 +7,7 @@
 
 <h1>Newly registered users</h1>
 {% for user in new_users %}
-<form action="/admin/users/status/" method="post">{% csrf_token %}
+<form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
     <div class="fieldWrapper">
         <label for="LastName">{{ user.last_name }}</label>
         <label for="FirstName">{{ user.first_name }}</label>
@@ -23,7 +23,7 @@
 
 <h1>Activated users</h1>
 {% for user in active_users %}
-<form action="/admin/users/status/" method="post">{% csrf_token %}
+<form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
     <div class="fieldWrapper">
         <label for="LastName">{{ user.last_name }}</label>
         <label for="FirstName">{{ user.first_name }}</label>
@@ -40,7 +40,7 @@
 
 <h1>Deactivated users</h1>
 {% for user in deactivated_users %}
-<form action="/admin/users/status/" method="post">{% csrf_token %}
+<form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
     <div class="fieldWrapper">
         <label for="LastName">{{ user.last_name }}</label>
         <label for="FirstName">{{ user.first_name }}</label>

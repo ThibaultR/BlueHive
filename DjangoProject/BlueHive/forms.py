@@ -1,11 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from models import CustomUser
-from models import Event
-from models import UserGroup
-from models import EventRequest
-from models import NewProfilePicture
+from BlueHive.models import CustomUser, Event, UserGroup, EventRequest, NewProfilePicture
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 MY_DATE_FORMATS = ['%d.%m.%Y',]

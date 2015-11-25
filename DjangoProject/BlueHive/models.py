@@ -131,8 +131,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     bank_name = models.CharField(max_length=254, blank=True)
     bank_iban = models.CharField(max_length=254, blank=True)
     bank_bic = models.CharField(max_length=254, blank=True)
-    language = models.ManyToManyField(Language,  null=True, blank=True)
-    license = models.ManyToManyField(License,  null=True, blank=True)
+    language = models.ManyToManyField(Language,  blank=True)
+    license = models.ManyToManyField(License, blank=True)
     #https://coderwall.com/p/bz0sng/simple-django-image-upload-to-model-imagefield
 
 
@@ -208,6 +208,9 @@ class Event(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_event_requests(self):
+        return EventRequest.objects.filter(event_id=self.id)
 
 
 class EventRequest(models.Model):

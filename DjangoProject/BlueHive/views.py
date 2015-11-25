@@ -1,11 +1,12 @@
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import auth
 from django.core.context_processors import csrf
 from BlueHive.models import Event, UserGroup, EventRequest,CustomUser,NewProfilePicture
-from forms import EventForm, UserGroupForm, CustomUserChangeForm, CustomUserCreationForm,EventRequestForm, NewProfilePictureForm, AdminCustomUserChangeForm
-from forms import AdminChangePasswordForm, UserChangePasswordForm
+from BlueHive.forms import EventForm, UserGroupForm, CustomUserChangeForm, CustomUserCreationForm,EventRequestForm, NewProfilePictureForm, AdminCustomUserChangeForm
+from BlueHive.forms import AdminChangePasswordForm, UserChangePasswordForm
 from django.utils import timezone
 from django.conf import settings
 from django.template import RequestContext
@@ -20,11 +21,6 @@ def active_user_check(user):
     return user.account_status == 1
 
 
-def handler404(request):
-    response = render_to_response('BlueHive/404.html', {},
-                                  context_instance=RequestContext(request))
-    response.status_code = 404
-    return response
 
 def user_login(request):
     message = "Please log in ..."
@@ -299,8 +295,8 @@ def user_events(request):
 # check events which have a group where user is part of
     user_groups = request.user.user_group.all()
     args['applied_events'] = EventRequest.objects.filter(user_id=request.user, event_id__begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(event_id__status=-1)
-    applied_events_ids = EventRequest.objects.values_list('event_id', flat=True).filter(user_id=request.user)
-    args['new_events'] = Event.objects.filter(user_group=user_groups, begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(id__in=applied_events_ids).exclude(status=-1)
+    applied_events_ids = EventRequest.objects.values_list('event_id', flat=True).filter(user_id=request.user).order_by('begin_time', 'name')
+    args['new_events'] = Event.objects.filter(user_group=user_groups, begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(id__in=applied_events_ids).exclude(status=-1).order_by('begin_time', 'name')
     return render_to_response('BlueHive/user/user_events.html', args)
 
 @login_required
@@ -353,27 +349,74 @@ def event(request, event_id):
 
 @user_passes_test(admin_check)
 def event_overview(request):
+    if request.method == 'POST':
+        event_id = request.POST.get('event_id')
+        for key, value in request.POST.iteritems():
+            if key.startswith( 'user' ):
+                user_id = key[7:]
+                actEventRequest = EventRequest.objects.get(event_id=event_id, user_id=user_id)
+                if value == 'rejected':
+                    actEventRequest.status = -1
+                    actEventRequest.save()
+                if value == 'waiting':
+                    actEventRequest.status = 0
+                    actEventRequest.save()
+                if value == 'accepted':
+                    actEventRequest.status = 1
+                    actEventRequest.save()
     #https://docs.djangoproject.com/en/1.8/ref/templates/builtins/#date
     args = {}
     args.update(csrf(request))
-    args['events'] = Event.objects.filter()
+    events = Event.objects.filter(begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(status=-1).order_by('begin_time', 'name')
+    event_request = EventRequest.objects.filter(event_id__in=events.values("id"))
+    args['events'] = events
+    args['event_request'] = event_request
 
     return render_to_response('BlueHive/event/event_overview.html', args)
 
+@user_passes_test(admin_check)
+def event_deactivate(request):
+    if request.method == 'POST':
+        event_id = request.POST.get('event_id')
+        event = get_object_or_404(Event, pk=event_id)
+        event.status = -1
+        event.save()
+    return HttpResponseRedirect(reverse('BlueHive:event_overview'))
 
-def event_deactivate(request, event_id):
-    if event_id:
-        e = Event.objects.get(id=event_id)
-        e.status = -1
-        e.save()
-        return HttpResponseRedirect('/event/overview')
+@user_passes_test(admin_check)
+def event_edit(request,event_id):
+    if request.method == 'POST':
+        form = EventForm(request.POST, instance=get_object_or_404(Event, pk=event_id))
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('BlueHive:event_overview'))
+        else:
+            print form.errors
+            return render(request, 'BlueHive/event/event_edit.html', {'form': form})
+    else:
+        form = EventForm(instance=get_object_or_404(Event, pk=event_id))
+        args = {}
+        args.update(csrf(request))
 
-def event_edit(request, event_id):
-    if event_id:
-        e = Event.objects.get(id=event_id)
-        e.status = -1
-        e.save()
-        return HttpResponseRedirect('/event/overview')
+        args['form'] = form
+        args['event_id'] = event_id
+        return render_to_response('BlueHive/event/event_edit.html', args)
+
+
+@user_passes_test(admin_check)
+def event_status(request):
+    if request.POST:
+        value = request.POST.get('value')
+        event_id = request.POST.get('event_id')
+        actEvent = get_object_or_404(Event, pk=event_id)
+        if value == 'deactivate':
+            actEvent.status = -1
+            actEvent.save()
+
+    return HttpResponseRedirect(reverse('BlueHive:event_overview'))
+
+
+
 
 @user_passes_test(admin_check)
 def group_overview(request):
@@ -397,7 +440,7 @@ def group_add(request):
 
 @user_passes_test(admin_check)
 def group_edit(request):
-    if request.POST:
+    if request.method == 'POST':
         id = request.POST.get('id')
         value = request.POST.get('value')
         usergroup = get_object_or_404(UserGroup, pk=id)
@@ -422,16 +465,16 @@ def admin_users(request):
     args = {}
     args.update(csrf(request))
     #args['user'] = request.user
-    args['new_users'] = CustomUser.objects.filter(account_status=0, is_superuser=0)
-    args['active_users'] = CustomUser.objects.filter(account_status=1, is_superuser=0)
-    args['deactivated_users'] = CustomUser.objects.filter(account_status=-1, is_superuser=0)
+    args['new_users'] = CustomUser.objects.filter(account_status=0, is_superuser=0).order_by('last_name', 'first_name')
+    args['active_users'] = CustomUser.objects.filter(account_status=1, is_superuser=0).order_by('last_name', 'first_name')
+    args['deactivated_users'] = CustomUser.objects.filter(account_status=-1, is_superuser=0).order_by('last_name', 'first_name')
 
 
     return render_to_response('BlueHive/admin/admin_users.html', args)
 
 @user_passes_test(admin_check)
 def admin_users_status(request):
-    if request.POST:
+    if request.method == 'POST':
         value = request.POST.get('value')
         user_id = request.POST.get('user_id')
         actUser = get_object_or_404(CustomUser, pk=user_id)
@@ -444,6 +487,7 @@ def admin_users_status(request):
         elif value == 'deactivate':
             # delete this user when his actual account_status == 0
             if actUser.account_status == 1:
+                #TODO what happens with the events of the user
                 actUser.account_status = -1
                 actUser.save()
                 return HttpResponseRedirect('/admin/users/')

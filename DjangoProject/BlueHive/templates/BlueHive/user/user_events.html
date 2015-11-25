@@ -7,13 +7,14 @@
 
     $(function() {
 
-        $(".click").editable("/user/events/edit_comment/", {
+        $(".click").editable("{% url 'BlueHive:user_events_edit_comment' %}", {
             submitdata: { csrfmiddlewaretoken : "{{ csrf_token }}", _method: "post"},
             select : true,
             submit : 'OK',
             cancel : 'cancel',
             cssclass : "editable"
         });
+
 
 
     });
@@ -34,9 +35,13 @@
 <h1>New Events</h1>
 
 {% for event in new_events %}
-<form action="/user/events/{{ event.id }}/" method="post" enctype="multipart/form-data">{% csrf_token %}
+<form action="{% url 'BlueHive:user_events_apply' event.id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
     <div class="fieldWrapper">
-       {{ event.name }}  Comment: <input type="text" name="user_comment">
+        <label for="EventName">{{ event.name }}</label>
+        <label for="Location">{{ event.location }}</label>
+        <label for="Date">{{ event.begin_time|date:"d.m.Y"|lower }}</label>
+        <label for="Time">{{ event.begin_time|date:"H:i"|lower }} - {{ event.end_time }}</label>
+        <label for="Comment">Comment:</label><input type="text" name="user_comment">
         <input type="submit" value="Apply for event"/>
         {{ form.email }}
     </div>
