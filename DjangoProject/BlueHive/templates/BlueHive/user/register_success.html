@@ -1,9 +1,24 @@
 {% extends "BlueHive/base.html" %}
-{% block title %}BlueHive Registered Successfull{% endblock %}
+{% block title %}BlueHive registration successfull{% endblock %}
 
 
 {%  block content %}
-    <h2>You have registered!</h2>
-    <p>Click <a href="{%  url 'BlueHive:user_login' %}">here</a> to login.</p>
+
+<div class="col-xs-12 col-sm-8 col-md-6 col-lg-5 col-centered ">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title panel-title-login">Success !</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-xs-8 col-centered text-center text-white">
+                    <h2>You have registered succesfully!</h2>
+
+                    <p>Click <a class="text-white text-italic" href="{%  url 'BlueHive:user_login' %}">here</a> to login.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

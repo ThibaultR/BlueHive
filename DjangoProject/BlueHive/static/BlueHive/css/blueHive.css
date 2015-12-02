@@ -37,6 +37,12 @@ body {
 .text-small {
   font-size: 10px;
 }
+.text-italic {
+  font-style: italic;
+}
+.text-bold {
+  font-style: bold;
+}
 .text-white {
   color: #ffffff;
 }

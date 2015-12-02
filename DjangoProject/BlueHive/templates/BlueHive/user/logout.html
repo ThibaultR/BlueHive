@@ -1,10 +1,25 @@
 {% extends "BlueHive/base.html" %}
-{% block title %}BlueHive Logout{% endblock %}
+{% block title %}BlueHive logged out{% endblock %}
 
 
 {%  block content %}
+<!--TODO is this page usefull ?-->
+<div class="col-xs-12 col-sm-8 col-md-6 col-lg-5 col-centered ">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title panel-title-login">Success !</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-xs-8 col-centered text-center text-white">
+                    <!--TODO why username ?-->
+                    <h2>You {{ username }}successfully logged out</h2>
 
-    <h1>You {{ username }}successfully logged out</h1>
-    <p>Click <a href="{% url 'BlueHive:user_login' %}">here</a> to login again!</p>
+                    <p>Click <a class="text-white text-italic" href="{%  url 'BlueHive:user_login' %}">here</a> to login again.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
