@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import ugettext_lazy as _
-
 from models import CustomUser
 from forms import CustomUserChangeForm, CustomUserCreationForm
 # Register your models here.
 from BlueHive.models import Event
+
+
 class CustomUserAdmin(UserAdmin):
     # The forms to add and change user instances
 
@@ -30,6 +31,7 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('email', 'first_name', 'last_name', 'is_staff')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
+
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Event)

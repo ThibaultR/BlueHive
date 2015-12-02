@@ -19,21 +19,21 @@
 
     <div id="page">
 
-            <div id="sidebar">
+        <div id="sidebar">
             {% block sidebar %}
 
-    <ul>
-            <li>Admin</li>
-            <li><a href="{% url 'BlueHive:event_overview' %}">Events</a></li>
-            <li><a href="{% url 'BlueHive:event_add' %}">Add Event</a></li>
-            <li><a href="{% url 'BlueHive:admin_users' %}">User management</a></li>
-            <li><a href="{% url 'BlueHive:group_overview' %}">Group Management</a></li>
-            <li></li>
-            <li><a href="{% url 'BlueHive:user_logout' %}">Logout</a></li>
+            <ul>
+                <li>Admin</li>
+                <li><a href="{% url 'BlueHive:event_overview' %}">Events</a></li>
+                <li><a href="{% url 'BlueHive:event_add' %}">Add Event</a></li>
+                <li><a href="{% url 'BlueHive:admin_users' %}">User management</a></li>
+                <li><a href="{% url 'BlueHive:group_overview' %}">Group Management</a></li>
+                <li></li>
+                <li><a href="{% url 'BlueHive:user_logout' %}">Logout</a></li>
 
-    </ul>
-    {% endblock %}
-    </div>
+            </ul>
+            {% endblock %}
+        </div>
 
 
     <div id="content">

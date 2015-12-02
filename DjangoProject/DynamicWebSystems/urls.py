@@ -19,7 +19,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^superadmin/', include(admin.site.urls)),
-    #url('^', include('django.contrib.auth.urls')),
-    #url(r'^login/', 'BlueHive.views.login', name='login'),
+    # url('^', include('django.contrib.auth.urls')),
+    # url(r'^login/', 'BlueHive.views.login', name='login'),
     url(r'^', include('BlueHive.urls', namespace="BlueHive")),
 ]

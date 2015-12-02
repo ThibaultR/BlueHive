@@ -6,26 +6,46 @@
     <title>{% block title %}My Base Template {% endblock %}</title>
     <script src="{% static 'BlueHive/jquery.min.js' %}" type="text/javascript"> </script>
     <script src="{% static 'BlueHive/jquery.jeditable.mini.js' %}" type="text/javascript"> </script>
-    <script src="{% static 'BlueHive/dropzone.js' %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'BlueHive/css/default.css' %}">
+    <script src="{% static 'BlueHive/dropzone.js' %}"></script><!--
+    <link rel="stylesheet" type="text/css" href="{% static 'BlueHive/css/default.css' %}">-->
+    <link rel="stylesheet" type="text/css" href="{% static 'BlueHive/css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'BlueHive/css/dropzone.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'BlueHive/css/blueHive.css' %}">
     <link rel="shortcut icon" href="{%  static 'BlueHive/favicon/favicon.ico' %}">
 
     {% block head %} {% endblock %}
 
 
-    </head>
-    <body>
+</head>
+<body class="main-background">
 
 
-    <div id="page">
+<div class="container-fluid full-height main-background-blur scrollable" >
+    <div class="not-footer">
+    <div class="row header">
+        {% block header %}
+        <div  class="vertical-center">
+            <img class="logo" src="{% static 'BlueHive/images/blueHive_logo.png' %}"/>
+        </div>
+        {% endblock %}
+    </div>
+    <div class="row">
+        {% block content %}
 
-
-    <div id="content">
-            {% block content %} {% endblock %}
-        <img src="{% static 'BlueHive/images/background.gif' %}" />
+        {% endblock %}
     </div>
     </div>
+    <div class="row footer">
+        {% block footer %}
+        <p>
+            <a class="text-white" href="company_website.html">company_website</a> |
+            <a class="text-white" href="explain_company.html">Tutorial</a> |
+            <a class="text-white" href="explain_company.html">Terms of use</a> |
+            <a class="text-white" href="explain_company.html">Legal notices</a>
+        </p>
+        {% endblock %}
+    </div>
+</div>
 
-    </body>
-    </html>
+</body>
+</html>

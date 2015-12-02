@@ -103,10 +103,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
 
-#AUTH_PROFILE_MODULE = 'BlueHive.UserProfile'
+# AUTH_PROFILE_MODULE = 'BlueHive.UserProfile'
 AUTH_USER_MODEL = 'BlueHive.CustomUser'
 LOGIN_URL='/'
 LOGIN_REDIRECT_URL='/'
 
+# TODO change to special media file
 MEDIA_ROOT = '.'
 MEDIA_URL='/media/'

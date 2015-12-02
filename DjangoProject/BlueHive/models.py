@@ -13,6 +13,7 @@ import os
 import uuid
 from django.conf import settings
 
+
 class UserType(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_altered = models.DateTimeField(auto_now=True)
@@ -28,6 +29,7 @@ class UserRating(models.Model):
     def __unicode__(self):
         return unicode(self.value)
 
+
 class Nationality(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_altered = models.DateTimeField(auto_now=True)
@@ -37,14 +39,16 @@ class Nationality(models.Model):
     def __unicode__(self):
         return unicode(self.value)
 
+
 class Language(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_altered = models.DateTimeField(auto_now=True)
     value = models.CharField(max_length=254)
-    abbreviation =  models.CharField(max_length=20)
+    abbreviation = models.CharField(max_length=20)
 
     def __unicode__(self):
         return unicode(self.value)
+
 
 class License(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
@@ -55,6 +59,7 @@ class License(models.Model):
     def __unicode__(self):
         return unicode(self.value)
 
+
 class UserGroup(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_altered = models.DateTimeField(auto_now=True)
@@ -64,12 +69,10 @@ class UserGroup(models.Model):
         return unicode(self.value)
 
 
-
-
-
 '''https://www.caktusgroup.com/blog/2013/08/07/migrating-custom-user-model-django/'''
-class CustomUserManager(BaseUserManager):
 
+
+class CustomUserManager(BaseUserManager):
     def _create_user(self, email, password,
                      is_staff, is_superuser, **extra_fields):
         """
@@ -95,6 +98,7 @@ class CustomUserManager(BaseUserManager):
         return self._create_user(email, password, True, True,
                                  **extra_fields)
 
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     """
     A fully featured User model with admin-compliant permissions that uses
@@ -110,7 +114,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # alternative for easy picture upload http://www.lightbird.net/dbe/forum2.html
     profile_picture = models.ImageField(default='dummy.jpg')
     # -1 deactivated, 0 new user, 1 active user, 2 moderator
-    account_status = models.IntegerField(default= 0)
+    account_status = models.IntegerField(default=0)
     user_group = models.ManyToManyField(UserGroup, default=1)
     rating = models.ForeignKey(UserRating, default=4)
     comment = models.CharField(max_length=254, blank=True)
@@ -131,9 +135,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     bank_name = models.CharField(max_length=254, blank=True)
     bank_iban = models.CharField(max_length=254, blank=True)
     bank_bic = models.CharField(max_length=254, blank=True)
-    language = models.ManyToManyField(Language,  blank=True)
+    language = models.ManyToManyField(Language, blank=True)
     license = models.ManyToManyField(License, blank=True)
-    #https://coderwall.com/p/bz0sng/simple-django-image-upload-to-model-imagefield
+    # https://coderwall.com/p/bz0sng/simple-django-image-upload-to-model-imagefield
 
 
     is_staff = models.BooleanField(_('staff status'), default=False,
@@ -172,13 +176,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         """
         send_mail(subject, message, from_email, [self.email])
 
-    def __str__(self):              # __unicode__ on Python 2
+    def __str__(self):  # __unicode__ on Python 2
         return self.email
 
 
 class NewProfilePicture(models.Model):
-    #https://github.com/lehins/django-smartfields
-    file = fields.ImageField(dependencies=[FileDependency(processor=ImageProcessor(format='JPEG', scale={'max_width': 1000, 'max_height': 1000}))])
+    # https://github.com/lehins/django-smartfields
+    file = fields.ImageField(dependencies=[
+        FileDependency(processor=ImageProcessor(format='JPEG', scale={'max_width': 1000, 'max_height': 1000}))])
     csrftoken = models.CharField(max_length=254)
     user_id = fields.IntegerField(default=0)
 
@@ -189,9 +194,9 @@ class NewProfilePicture(models.Model):
                 field.upload_to = path
         super(NewProfilePicture, self).save(*args, **kwargs)
 
-
     def __unicode__(self):
         return unicode(self.file) or u''
+
 
 class Event(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
@@ -203,7 +208,7 @@ class Event(models.Model):
     begin_time = models.DateTimeField()
     end_time = models.CharField(max_length=254)
     user_group = models.ForeignKey(UserGroup, default=1)
-    #-1 killed, 0 nothing done, 1 users set, 2 times users set, 3 everything ok
+    # -1 killed, 0 nothing done, 1 users set, 2 times users set, 3 everything ok
     status = models.IntegerField(default=0)
 
     def __unicode__(self):
@@ -220,9 +225,9 @@ class EventRequest(models.Model):
     user_id = models.ForeignKey(CustomUser)
     user_comment = models.CharField(max_length=254, blank=True)
     # -1 rejected, 0 wait, 1 accepted
-    status = models.IntegerField(default = 0)
+    status = models.IntegerField(default=0)
     begin_time = models.CharField(default='', max_length=254, blank=True)
-    end_time = models.CharField(default = '', max_length=254, blank=True)
-    mail_sent = models.BooleanField(default = False)
+    end_time = models.CharField(default='', max_length=254, blank=True)
+    mail_sent = models.BooleanField(default=False)
 
     unique_together = ("event_id", "user_id")

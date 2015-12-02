@@ -4,26 +4,28 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import auth
 from django.core.context_processors import csrf
-from BlueHive.models import Event, UserGroup, EventRequest,CustomUser,NewProfilePicture
-from BlueHive.forms import EventForm, UserGroupForm, CustomUserChangeForm, CustomUserCreationForm,EventRequestForm, NewProfilePictureForm, AdminCustomUserChangeForm
+from BlueHive.models import Event, UserGroup, EventRequest, CustomUser, NewProfilePicture
+from BlueHive.forms import EventForm, UserGroupForm, CustomUserChangeForm, CustomUserCreationForm, EventRequestForm, \
+    NewProfilePictureForm, AdminCustomUserChangeForm
 from BlueHive.forms import AdminChangePasswordForm, UserChangePasswordForm
 from django.utils import timezone
 from django.conf import settings
 from django.template import RequestContext
-from django.middleware.csrf import rotate_token # for changing csrf token
+from django.middleware.csrf import rotate_token  # for changing csrf token
 import shutil, os
 
 
 def admin_check(user):
     return user.is_superuser == 1
 
+
 def active_user_check(user):
     return user.account_status == 1
 
 
-
 def user_login(request):
-    message = "Please log in ..."
+    # message = "Please log in ..."
+    message = ""
     if request.user.is_authenticated():
         auth.logout(request)
 
@@ -34,14 +36,14 @@ def user_login(request):
 
         if user is not None:
             if user.is_superuser == 1:
-                auth.login(request,user)
+                auth.login(request, user)
                 return HttpResponseRedirect('/event/overview/')
             if user.account_status == -1:
                 message = "Your account is blocked."
             if user.account_status == 0:
                 message = "Your account is not active, please wait until you are activated."
             if user.account_status == 1:
-                auth.login(request,user)
+                auth.login(request, user)
                 return HttpResponseRedirect('/user/events/')
         else:
             message = "Your username/password combination doesn't exist."
@@ -49,6 +51,7 @@ def user_login(request):
     args['message'] = message
     args.update(csrf(request))
     return render_to_response('BlueHive/user/login.html', args)
+
 
 def user_logout(request):
     auth.logout(request)
@@ -59,11 +62,11 @@ def user_register(request):
     if request.user.is_authenticated():
         auth.logout(request)
     if request.method == 'POST':
-        #form = CustomUserCreationForm(request.POST, request.FILES)
+        # form = CustomUserCreationForm(request.POST, request.FILES)
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
 
-            #check if the image for the user is here
+            # check if the image for the user is here
             try:
                 profile_picture_old_path = NewProfilePicture.objects.get(csrftoken=request.META["CSRF_COOKIE"])
                 new_user = form.save(commit=False)
@@ -77,7 +80,7 @@ def user_register(request):
                 shutil.copy2(str(profile_picture_old_path), profile_picture_new_path)
 
                 # delete the old folder containing the pictures of that user
-                shutil.rmtree(settings.MEDIA_ROOT + '/new_pictures/'+ request.META["CSRF_COOKIE"])
+                shutil.rmtree(settings.MEDIA_ROOT + '/new_pictures/' + request.META["CSRF_COOKIE"])
 
                 new_user.profile_picture = profile_picture_new_path
                 new_user.save()
@@ -87,14 +90,13 @@ def user_register(request):
 
             except NewProfilePicture.DoesNotExist:
                 print 'There is no profile picture for this user'
-                return render(request, 'BlueHive/user/register.html', {'form': form, 'picturemissing': 'Please upload a profile picture!'})
-
-
+                return render(request, 'BlueHive/user/register.html',
+                              {'form': form, 'picturemissing': 'Please upload a profile picture!'})
 
             return HttpResponseRedirect('/user/register_success')
         else:
-            #render_to_response('BlueHive/user/register.html', {'form': form})
-            print form.errors #To see the form errors in the console.
+            # render_to_response('BlueHive/user/register.html', {'form': form})
+            print form.errors  # To see the form errors in the console.
             return render(request, 'BlueHive/user/register.html', {'form': form})
     rotate_token(request)
     args = {}
@@ -127,7 +129,7 @@ def user_data_set_profile_picture(request, user_id):
                 new_file = NewProfilePicture(file=request.FILES['file'], csrftoken=csrftoken, user_id=actUser.id)
                 new_file.save(extra_param=csrftoken)
 
-                #now set the new picture as actual picture
+                # now set the new picture as actual picture
                 profile_picture_old_path = NewProfilePicture.objects.get(user_id=actUser.id)
 
                 # put the picture to the right place and save it for the user
@@ -138,7 +140,7 @@ def user_data_set_profile_picture(request, user_id):
                 shutil.copy2(str(profile_picture_old_path), profile_picture_new_path)
 
                 # delete the old folder containing the pictures of that user
-                shutil.rmtree(settings.MEDIA_ROOT + '/new_pictures/'+ request.META["CSRF_COOKIE"])
+                shutil.rmtree(settings.MEDIA_ROOT + '/new_pictures/' + request.META["CSRF_COOKIE"])
 
                 actUser.profile_picture = profile_picture_new_path
                 actUser.save()
@@ -159,9 +161,8 @@ def user_data_set_profile_picture(request, user_id):
             print form.errors
             return HttpResponse(status=500)
 
-
-
     return HttpResponseRedirect('/user/register/')
+
 
 @login_required
 def user_data_get_profile_picture(request, user_id):
@@ -172,13 +173,12 @@ def user_data_get_profile_picture(request, user_id):
             # now we can trust the user_id param
             actUser = get_object_or_404(CustomUser, pk=user_id)
         # lot of help from http://stackoverflow.com/questions/18048825/how-to-limit-the-number-of-dropzone-js-files-uploaded?rq=1
-        #TODO check validity
+        # TODO check validity
         picture_path = '/media/' + str(CustomUser.objects.get(id=actUser.id).profile_picture)
         picture_size = os.path.getsize(str(CustomUser.objects.get(id=actUser.id).profile_picture))
-        return JsonResponse({'name':picture_path, 'size':picture_size})
+        return JsonResponse({'name': picture_path, 'size': picture_size})
 
     return HttpResponseRedirect('/user/data/')
-
 
 
 def user_register_success(request):
@@ -189,7 +189,7 @@ def user_register_success(request):
 def user_data(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
-        password_form = UserChangePasswordForm(request.user,request.POST)
+        password_form = UserChangePasswordForm(request.user, request.POST)
         newPassword = False
         formError = False
         if len(request.POST.get('new_password1')) > 1:
@@ -202,7 +202,7 @@ def user_data(request):
         if form.is_valid() and not formError:
             form.save()
             if newPassword:
-                new_password= password_form.cleaned_data['new_password2']
+                new_password = password_form.cleaned_data['new_password2']
                 user = get_object_or_404(CustomUser, pk=request.user.id)
                 user.set_password(new_password)
                 user.save()
@@ -225,7 +225,8 @@ def user_data(request):
 @user_passes_test(admin_check)
 def admin_users_edit(request, user_id):
     if request.method == 'POST':
-        form = AdminCustomUserChangeForm(request.POST, request.FILES, instance=get_object_or_404(CustomUser, pk=user_id))
+        form = AdminCustomUserChangeForm(request.POST, request.FILES,
+                                         instance=get_object_or_404(CustomUser, pk=user_id))
         password_form = AdminChangePasswordForm(request.POST)
         newPassword = False
         formError = False
@@ -238,17 +239,18 @@ def admin_users_edit(request, user_id):
         if form.is_valid() and not formError:
             form.save()
             if newPassword:
-                new_password= password_form.cleaned_data['new_password2']
+                new_password = password_form.cleaned_data['new_password2']
                 user = get_object_or_404(CustomUser, pk=user_id)
                 user.set_password(new_password)
                 user.save()
             return HttpResponseRedirect('/admin/users/')
         else:
             print form.errors
-            return render(request, 'BlueHive/admin/admin_users_edit.html', {'form': form, 'password_form': password_form})
+            return render(request, 'BlueHive/admin/admin_users_edit.html',
+                          {'form': form, 'password_form': password_form})
     else:
         form = AdminCustomUserChangeForm(instance=get_object_or_404(CustomUser, pk=user_id))
-        #http://ruddra.com/2015/09/18/implementation-of-forgot-reset-password-feature-in-django/
+        # http://ruddra.com/2015/09/18/implementation-of-forgot-reset-password-feature-in-django/
         password_form = AdminChangePasswordForm()
         args = {}
         args.update(csrf(request))
@@ -257,25 +259,26 @@ def admin_users_edit(request, user_id):
         args['password_form'] = password_form
         args['user_id'] = user_id
 
-
     return render_to_response('BlueHive/admin/admin_users_edit.html', args)
+
 
 @login_required
 def user_events_apply(request, event_id):
     event_id = int(event_id)
     if request.method == 'POST':
-        #TODO security of user_comment parameter
+        # TODO security of user_comment parameter
         user_comment = request.POST.get('user_comment')
         # check if user is allowed to be part of this event
         try:
             event = Event.objects.get(id=event_id)
             # compare if event is in the right status, date and a group where the user is also part in
-            if event.status != -1 and event.begin_time >= timezone.now() and request.user.user_group.all().filter(value=event.user_group).exists():
+            if event.status != -1 and event.begin_time >= timezone.now() and request.user.user_group.all().filter(
+                    value=event.user_group).exists():
                 # check if there is already an EventRequest for this event
                 try:
                     EventRequest.objects.get(event_id=event_id, user_id=request.user.id)
                 except EventRequest.DoesNotExist:
-                    #now the new Eventrequest can be created
+                    # now the new Eventrequest can be created
                     myEventRequest = EventRequest()
                     myEventRequest.event_id = event
                     myEventRequest.user_id = request.user
@@ -292,12 +295,18 @@ def user_events(request):
     args = {}
     args.update(csrf(request))
 
-# check events which have a group where user is part of
+    # check events which have a group where user is part of
     user_groups = request.user.user_group.all()
-    args['applied_events'] = EventRequest.objects.filter(user_id=request.user, event_id__begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(event_id__status=-1)
-    applied_events_ids = EventRequest.objects.values_list('event_id', flat=True).filter(user_id=request.user).order_by('begin_time', 'name')
-    args['new_events'] = Event.objects.filter(user_group=user_groups, begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(id__in=applied_events_ids).exclude(status=-1).order_by('begin_time', 'name')
+    args['applied_events'] = EventRequest.objects.filter(user_id=request.user,
+                                                         event_id__begin_time__gte=timezone.now() + timezone.timedelta(
+                                                             days=-2)).exclude(event_id__status=-1)
+    applied_events_ids = EventRequest.objects.values_list('event_id', flat=True).filter(user_id=request.user).order_by(
+        'begin_time', 'name')
+    args['new_events'] = Event.objects.filter(user_group=user_groups,
+                                              begin_time__gte=timezone.now() + timezone.timedelta(days=-2)).exclude(
+        id__in=applied_events_ids).exclude(status=-1).order_by('begin_time', 'name')
     return render_to_response('BlueHive/user/user_events.html', args)
+
 
 @login_required
 def user_events_edit_comment(request):
@@ -305,7 +314,7 @@ def user_events_edit_comment(request):
         user_comment = request.POST.get('value')
         event_id = request.POST.get('id')
         user_id = request.user.id
-        data = {'event_id': event_id, 'user_id': user_id,  'user_comment': user_comment}
+        data = {'event_id': event_id, 'user_id': user_id, 'user_comment': user_comment}
         form = EventRequestForm(data)
 
         if form.is_valid():
@@ -319,14 +328,14 @@ def user_events_edit_comment(request):
         else:
             return HttpResponse(user_comment)
 
-
         return HttpResponse(user_comment)
     return HttpResponseRedirect('/user/events')
+
 
 @user_passes_test(admin_check)
 def event_add(request):
     if request.POST:
-        form =EventForm(request.POST)
+        form = EventForm(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/event/overview')
@@ -352,7 +361,7 @@ def event_overview(request):
     if request.method == 'POST':
         event_id = request.POST.get('event_id')
         for key, value in request.POST.iteritems():
-            if key.startswith( 'user' ):
+            if key.startswith('user'):
                 user_id = key[7:]
                 actEventRequest = EventRequest.objects.get(event_id=event_id, user_id=user_id)
                 if value == 'rejected':
@@ -364,15 +373,17 @@ def event_overview(request):
                 if value == 'accepted':
                     actEventRequest.status = 1
                     actEventRequest.save()
-    #https://docs.djangoproject.com/en/1.8/ref/templates/builtins/#date
+    # https://docs.djangoproject.com/en/1.8/ref/templates/builtins/#date
     args = {}
     args.update(csrf(request))
-    events = Event.objects.filter(begin_time__gte=timezone.now()+timezone.timedelta(days=-2)).exclude(status=-1).order_by('begin_time', 'name')
+    events = Event.objects.filter(begin_time__gte=timezone.now() + timezone.timedelta(days=-2)).exclude(
+        status=-1).order_by('begin_time', 'name')
     event_request = EventRequest.objects.filter(event_id__in=events.values("id"))
     args['events'] = events
     args['event_request'] = event_request
 
     return render_to_response('BlueHive/event/event_overview.html', args)
+
 
 @user_passes_test(admin_check)
 def event_deactivate(request):
@@ -383,8 +394,9 @@ def event_deactivate(request):
         event.save()
     return HttpResponseRedirect(reverse('BlueHive:event_overview'))
 
+
 @user_passes_test(admin_check)
-def event_edit(request,event_id):
+def event_edit(request, event_id):
     if request.method == 'POST':
         form = EventForm(request.POST, instance=get_object_or_404(Event, pk=event_id))
         if form.is_valid():
@@ -416,8 +428,6 @@ def event_status(request):
     return HttpResponseRedirect(reverse('BlueHive:event_overview'))
 
 
-
-
 @user_passes_test(admin_check)
 def group_overview(request):
     args = {}
@@ -425,18 +435,20 @@ def group_overview(request):
     args['newusergroupform'] = UserGroupForm()
     args['groups'] = UserGroup.objects.all()
 
-
     return render_to_response('BlueHive/group/group_overview.html', args)
+
 
 @user_passes_test(admin_check)
 def group_add(request):
     if request.POST:
-        form =UserGroupForm(request.POST)
+        form = UserGroupForm(request.POST)
         if form.is_valid():
             form.save()
         else:
-            return render(request, 'BlueHive/group/group_overview.html', {'newusergroupform': form, 'groups': UserGroup.objects.all()})
+            return render(request, 'BlueHive/group/group_overview.html',
+                          {'newusergroupform': form, 'groups': UserGroup.objects.all()})
     return HttpResponseRedirect('/group/overview')
+
 
 @user_passes_test(admin_check)
 def group_edit(request):
@@ -448,6 +460,7 @@ def group_edit(request):
         usergroup.save()
         return HttpResponse(value)
     return HttpResponseRedirect('/group/overview')
+
 
 @user_passes_test(admin_check)
 def group_delete(request, group_id):
@@ -464,13 +477,15 @@ def group_delete(request, group_id):
 def admin_users(request):
     args = {}
     args.update(csrf(request))
-    #args['user'] = request.user
+    # args['user'] = request.user
     args['new_users'] = CustomUser.objects.filter(account_status=0, is_superuser=0).order_by('last_name', 'first_name')
-    args['active_users'] = CustomUser.objects.filter(account_status=1, is_superuser=0).order_by('last_name', 'first_name')
-    args['deactivated_users'] = CustomUser.objects.filter(account_status=-1, is_superuser=0).order_by('last_name', 'first_name')
-
+    args['active_users'] = CustomUser.objects.filter(account_status=1, is_superuser=0).order_by('last_name',
+                                                                                                'first_name')
+    args['deactivated_users'] = CustomUser.objects.filter(account_status=-1, is_superuser=0).order_by('last_name',
+                                                                                                      'first_name')
 
     return render_to_response('BlueHive/admin/admin_users.html', args)
+
 
 @user_passes_test(admin_check)
 def admin_users_status(request):
@@ -487,7 +502,7 @@ def admin_users_status(request):
         elif value == 'deactivate':
             # delete this user when his actual account_status == 0
             if actUser.account_status == 1:
-                #TODO what happens with the events of the user
+                # TODO what happens with the events of the user
                 actUser.account_status = -1
                 actUser.save()
                 return HttpResponseRedirect('/admin/users/')
@@ -505,5 +520,3 @@ def admin_users_status(request):
                 return HttpResponseRedirect('/admin/users/edit/' + user_id)
 
     return HttpResponseRedirect('/admin/users/')
-
-

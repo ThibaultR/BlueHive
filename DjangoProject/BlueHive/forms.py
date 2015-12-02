@@ -1,10 +1,12 @@
-from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from datetime import datetime
 
+from django import forms
+from django.forms import extras
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from BlueHive.models import CustomUser, Event, UserGroup, EventRequest, NewProfilePicture
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-MY_DATE_FORMATS = ['%d.%m.%Y',]
+MY_DATE_FORMATS = ['%d.%m.%Y', ]
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -15,20 +17,23 @@ class CustomUserCreationForm(UserCreationForm):
 
     def __init__(self, *args, **kargs):
         super(CustomUserCreationForm, self).__init__(*args, **kargs)
-        #self.fields["language"].widget = forms.CheckboxSelectMultiple()
-        #self.fields["language"].help_text = ""
-        #del self.fields['username']
+        # self.fields["language"].widget = forms.CheckboxSelectMultiple()
+        # self.fields["language"].help_text = ""
+        # del self.fields['username']
 
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'phone_number', 'birth_date', 'social_security_number', 'address', 'zip_code',
-                  'city', 'nationality', 'education', 'job_position', 'work_experience', 'language', 'license', 'profile_picture']
-        widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple, 'birth_date': forms.DateInput()}
-
+        fields = ['email', 'first_name', 'last_name', 'phone_number', 'birth_date', 'social_security_number', 'address',
+                  'zip_code',
+                  'city', 'nationality', 'education', 'job_position', 'work_experience', 'language', 'license',
+                  'profile_picture']
+        widgets = {'language': forms.CheckboxSelectMultiple,
+                   'license': forms.CheckboxSelectMultiple,
+                   'birth_date': extras.SelectDateWidget(years=range(datetime.now().year - 70,
+                                                                     datetime.now().year - 16))}
 
 
 class CustomUserChangeForm(UserChangeForm):
-
     """A form for updating users.
     Includes all the fields on the user, but replaces the password field
     with admin's password hash display field.
@@ -41,14 +46,14 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
-        exclude = ['date_created', 'rating', 'user_type', 'passport_issue_date', 'passport_expiration_date', 'user_group', 'account_status', 'email']
-        widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple, 'birth_date': forms.DateInput}
-
+        exclude = ['date_created', 'rating', 'user_type', 'passport_issue_date', 'passport_expiration_date',
+                   'user_group', 'account_status', 'email']
+        widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple,
+                   'birth_date': forms.DateInput}
 
     def __init__(self, *args, **kwargs):
         """Init the form."""
         super(CustomUserChangeForm, self).__init__(*args, **kwargs)
-
 
     def clean_password(self):
         """Clean password.
@@ -61,8 +66,6 @@ class CustomUserChangeForm(UserChangeForm):
 
 
 class UserChangePasswordForm(forms.Form):
-
-
     """
     A form that lets a user change their password without entering the old
     password
@@ -70,23 +73,21 @@ class UserChangePasswordForm(forms.Form):
     error_messages = {
         'password_mismatch': ("The two password fields were not matching."),
         'password_incorrect': ("Your old password was entered incorrectly. "
-                                "Please enter it again."),
+                               "Please enter it again."),
     }
     old_password = forms.CharField(label=("Old password"),
-                                    widget=forms.PasswordInput,
-                                    required = False)
+                                   widget=forms.PasswordInput,
+                                   required=False)
     new_password1 = forms.CharField(label=("New password"),
                                     widget=forms.PasswordInput,
-                                    required = False)
+                                    required=False)
     new_password2 = forms.CharField(label=("New password confirmation"),
                                     widget=forms.PasswordInput,
-                                    required = False)
-
+                                    required=False)
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
         super(UserChangePasswordForm, self).__init__(*args, **kwargs)
-
 
     def clean_new_password2(self):
         password1 = self.cleaned_data.get('new_password1')
@@ -119,8 +120,6 @@ class UserChangePasswordForm(forms.Form):
 
 
 class AdminChangePasswordForm(forms.Form):
-
-
     """
     A form that lets a user change their password without entering the old
     password
@@ -130,11 +129,10 @@ class AdminChangePasswordForm(forms.Form):
     }
     new_password1 = forms.CharField(label=("New password"),
                                     widget=forms.PasswordInput,
-                                    required = False)
+                                    required=False)
     new_password2 = forms.CharField(label=("New password confirmation"),
                                     widget=forms.PasswordInput,
-                                    required = False)
-
+                                    required=False)
 
     def clean_new_password2(self):
         password1 = self.cleaned_data.get('new_password1')
@@ -149,7 +147,6 @@ class AdminChangePasswordForm(forms.Form):
 
 
 class AdminCustomUserChangeForm(UserChangeForm):
-
     """A form for updating users.
     Includes all the fields on the user, but replaces the password field
     with admin's password hash display field.
@@ -163,13 +160,12 @@ class AdminCustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         exclude = ['date_created', 'user_type', 'passport_issue_date', 'passport_expiration_date', 'account_status']
-        widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple, 'birth_date': forms.DateInput, 'user_group':  forms.CheckboxSelectMultiple}
-
+        widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple,
+                   'birth_date': forms.DateInput, 'user_group': forms.CheckboxSelectMultiple}
 
     def __init__(self, *args, **kwargs):
         """Init the form."""
         super(AdminCustomUserChangeForm, self).__init__(*args, **kwargs)
-
 
     def clean_password(self):
         """Clean password.
@@ -182,23 +178,20 @@ class AdminCustomUserChangeForm(UserChangeForm):
 
 
 class EventForm(forms.ModelForm):
-
     class Meta:
         model = Event
         exclude = ['status']
-        #fields = '__all__'
+        # fields = '__all__'
 
 
 class EventRequestForm(forms.ModelForm):
-
     class Meta:
         model = EventRequest
-        #exclude = ['status']
+        # exclude = ['status']
         fields = ['event_id', 'user_id', 'user_comment']
 
 
 class UserGroupForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
         """Init the form."""
         super(UserGroupForm, self).__init__(*args, **kwargs)
@@ -207,10 +200,8 @@ class UserGroupForm(forms.ModelForm):
         model = UserGroup
         fields = '__all__'
 
-class NewProfilePictureForm(forms.ModelForm):
 
+class NewProfilePictureForm(forms.ModelForm):
     class Meta:
         model = NewProfilePicture
         exclude = ['user_id']
-
-
