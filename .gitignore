@@ -55,5 +55,8 @@ docs/_build/
 
 # PyBuilder
 target/
+
+BlueHiveWeb/.idea/
+
 DjangoProject/new_pictures/
-DjangoProject/.idea/lessc/
+DjangoProject/.idea/
