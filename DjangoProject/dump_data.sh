@@ -1,3 +1,3 @@
 #!/bin/sh
-./manage.py dumpdata --indent 2 > BlueHive/fixtures/initial_data.json
+./manage.py dumpdata --indent 4 > BlueHive/fixtures/initial_data.json
 
