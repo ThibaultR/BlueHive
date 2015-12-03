@@ -23,7 +23,7 @@
 {%  block content %}
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="panel-title">Groups management</div>
+        <div class="panel-title">Groups overview</div>
     </div>
     <div class="panel-body">
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-xs-2">
                         <form action="{% url 'BlueHive:group_delete' group.id %}">
-                            <button>Delete</button>
+                            <button class="negative-color">Delete</button>
                         </form>
                     </div>
                 </div>

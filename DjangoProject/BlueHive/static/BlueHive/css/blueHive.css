@@ -40,6 +40,10 @@ body {
 .text-very-small {
   font-size: 10px;
 }
+.text-smaller {
+  font-size: 12px;
+  font-weight: normal;
+}
 .text-small {
   font-size: 16px;
   font-weight: normal;
@@ -55,6 +59,10 @@ body {
 }
 .text-white {
   color: #ffffff;
+}
+.negative-color {
+  color: #4d97c8;
+  background-color: #fec8c8;
 }
 ::-webkit-input-placeholder {
   /* WebKit, Blink, Edge */
@@ -187,13 +195,15 @@ body {
   padding: 0 5px;
   margin: 0;
 }
-.element-block form {
+.element-block form,
+.element-block-details form {
   display: inline-block;
   padding: 0 2px;
   min-width: 100%;
   width: 100%;
 }
-.element-block form button {
+.element-block form button,
+.element-block-details form button {
   display: inline-block;
   font-size: 16px;
   font-weight: normal;
@@ -202,12 +212,31 @@ body {
   min-width: 100%;
   width: 100%;
 }
+.element-block-title {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
 .element-block-title p {
   padding: 0 5px;
   margin: 0;
   font-size: 16px;
   font-weight: normal;
   color: #ffffff;
+}
+.element-block-title > * {
+  padding: 0;
+}
+.element-block-details {
+  background-color: #ffffff;
+  border: none;
+  padding: 5px;
+  margin: -5px 0px 5px;
+  font-size: 16px;
+  color: #4d97c8;
 }
 /***************************
     Override Bootstrap

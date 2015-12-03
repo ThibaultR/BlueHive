@@ -4,6 +4,7 @@
 @main-color: #4D97C8;
 @main-color-light: #64BEFA;
 @second-color: white;
+@negative-color: #FEC8C8;
 @footer-size: 34px;
 
 html,body{
@@ -54,6 +55,11 @@ html,body{
   font-size: 10px;
 }
 
+.text-smaller {
+  font-size: 12px;
+  font-weight: normal;
+}
+
 .text-small {
   font-size: 16px;
   font-weight: normal;
@@ -72,6 +78,11 @@ html,body{
 
 .text-white {
   color: @second-color;
+}
+
+.negative-color {
+  color: @main-color;
+  background-color: @negative-color;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
@@ -214,28 +225,37 @@ html,body{
   .text-bold;
 }
 
-.element-block > *{
+.element-block > * {
   .col-no-padding;
 }
 
-.element-block p{
+.element-block p {
   padding: 0 5px;
   margin: 0;
 }
 
-.element-block form{
+.element-block form, .element-block-details form {
   display: inline-block;
   padding: 0 2px;
   .full-width;
 }
 
-.element-block form button{
+.element-block form button, .element-block-details form button {
   display: inline-block;
   font-size: 16px;
   font-weight: normal;
   margin: 0;
   padding: 0;
   .full-width;
+}
+
+.element-block-title {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  margin: 0;
 }
 
 .element-block-title p{
@@ -245,6 +265,18 @@ html,body{
   .text-white;
 }
 
+.element-block-title > *{
+  .col-no-padding;
+}
+
+.element-block-details {
+  background-color: @second-color;
+  border: none;
+  padding: 5px;
+  margin: -5px 0px 5px;
+  font-size: 16px;
+  .text-main-color;
+}
 
 /***************************
     Override Bootstrap

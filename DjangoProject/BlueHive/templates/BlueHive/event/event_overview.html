@@ -3,6 +3,93 @@
 {% block title %}Event Overview{% endblock %}
 
 {%  block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">Events overview</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
+            <div class="row">
+                {% if events %}
+                <div class="row element-block-title">
+                    <div class="col-xs-4">
+                        <p>Event</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p>Location</p>
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <p>Beginning</p>
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <p>Ending</p>
+                    </div>
+                </div>
+                {% for event in events %}
+                <div class="row element-block">
+                    <div class="col-xs-4">
+                        <p>{{ event.name }}</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p class="text-small">{{ event.location }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p class="text-smaller text-center">{{ event.begin_time|date:"d.m.Y"|lower }} <br> {{ event.begin_time|date:"H:i"|lower }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <!--TODO if date show date format-->
+                        <p class="text-smaller text-center">{{ event.end_time }}</p>
+                    </div>
+                </div>
+                <!--TODO show only on click-->
+                <div class="row element-block-details">
+                    <div class="col-xs-12">
+                        <!--TODO get values-->
+                        <p class="text-smaller">(X Users applied / Y Users acctepted)</p>
+                        <div class="row">
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-3">
+
+                            </div>
+                            <div class="col-xs-3">
+
+                            </div>
+                            <div class="col-xs-3">
+                                <form action="{% url 'BlueHive:event_edit' event.id %}">
+                                    <button type="submit">Edit</button>
+                                </form>
+                            </div>
+                            <div class="col-xs-3">
+                                <form action="{% url 'BlueHive:event_status' %}" method="post">{% csrf_token %}
+                                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                                    <!--TODO isnt that deleting ?-->
+                                    <button class="negative-color" type="submit" name="value" value="deactivate">Deactivate</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="category-title-register">No events.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
 <h1>Event Overview</h1>
 
     {% for event in events %}
