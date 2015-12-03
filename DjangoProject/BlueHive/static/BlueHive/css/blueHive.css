@@ -42,6 +42,7 @@ body {
 }
 .text-small {
   font-size: 16px;
+  font-weight: normal;
 }
 .text-italic {
   font-style: italic;
@@ -192,7 +193,6 @@ body {
   min-width: 100%;
   width: 100%;
 }
-.small-button,
 .element-block form button {
   display: inline-block;
   font-size: 16px;
@@ -201,6 +201,13 @@ body {
   padding: 0;
   min-width: 100%;
   width: 100%;
+}
+.element-block-title p {
+  padding: 0 5px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: normal;
+  color: #ffffff;
 }
 /***************************
     Override Bootstrap
