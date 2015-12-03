@@ -19,6 +19,9 @@ body {
 .scrollable {
   overflow: auto;
 }
+.col-no-padding {
+  padding: 0;
+}
 .row-eq-height {
   display: -webkit-box;
   display: -webkit-flex;
@@ -34,14 +37,20 @@ body {
   top: 50%;
   transform: translateY(-50%);
 }
-.text-small {
+.text-very-small {
   font-size: 10px;
+}
+.text-small {
+  font-size: 16px;
 }
 .text-italic {
   font-style: italic;
 }
 .text-bold {
-  font-style: bold;
+  font-weight: bold;
+}
+.text-main-color {
+  color: #4d97c8;
 }
 .text-white {
   color: #ffffff;
@@ -64,6 +73,10 @@ body {
   /* Internet Explorer 10-11 */
   color: #4d97c8;
 }
+.alert-small {
+  padding: 5px;
+  margin-bottom: 2px;
+}
 .main-background {
   background-image: url("../images/background_blur.jpg");
   background-size: cover;
@@ -75,9 +88,58 @@ body {
 .header {
   height: 25%;
   text-align: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+}
+.header .sidebar-menu-left {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.header .sidebar-menu-left h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+.header .sidebar-menu-left a {
+  text-decoration: none;
+  color: #ffffff;
+}
+.header .sidebar-menu-left a:hover {
+  color: #4d97c8;
 }
 .header .logo {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header .logo .logo-image {
   height: 50%;
+}
+.header .sidebar-menu-right {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.header .sidebar-menu-right h1 {
+  margin: 0;
+  font-weight: bold;
+  color: #4d97c8;
+}
+.header .sidebar-menu-right .link {
+  color: #ffffff;
 }
 .not-footer {
   min-height: 100%;
@@ -102,6 +164,43 @@ body {
 }
 .footer p {
   margin: 10px 0;
+}
+.element-block {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: none;
+  padding: 5px;
+  margin: 5px 0px;
+  font-size: 20px;
+  color: #4d97c8;
+  font-weight: bold;
+}
+.element-block > * {
+  padding: 0;
+}
+.element-block p {
+  padding: 0 5px;
+  margin: 0;
+}
+.element-block form {
+  display: inline-block;
+  padding: 0 2px;
+  min-width: 100%;
+  width: 100%;
+}
+.small-button,
+.element-block form button {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  min-width: 100%;
+  width: 100%;
 }
 /***************************
     Override Bootstrap
@@ -179,11 +278,10 @@ form {
   font-size: 16px;
   margin: 2px 0px;
 }
-.fieldWrapper .alert {
-  padding: 5px;
-  margin-bottom: 2px;
-}
 .label-container-register {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -224,4 +322,18 @@ form {
   vertical-align: middle;
   font-size: 20px;
   color: #ffffff;
+}
+/***************************
+    Override Jeditable
+***************************/
+/***************************
+    Group Overiview
+***************************/
+.create-group-input-container {
+  padding-right: 2px;
+  padding-left: 0px;
+}
+.create-group-button-container {
+  padding-right: 7px;
+  padding-left: 2px;
 }

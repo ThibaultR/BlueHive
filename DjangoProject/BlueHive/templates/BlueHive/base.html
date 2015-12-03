@@ -15,26 +15,48 @@
 
     {% block head %} {% endblock %}
 
-
 </head>
 <body class="main-background">
 
-
 <div class="container-fluid full-height main-background-blur scrollable" >
-    <div class="not-footer">
-    <div class="row header">
-        {% block header %}
-        <div  class="vertical-center">
-            <img class="logo" src="{% static 'BlueHive/images/blueHive_logo.png' %}"/>
-        </div>
-        {% endblock %}
-    </div>
-    <div class="row">
-        {% block content %}
+    <div class="row not-footer">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-centered ">
+            <div class="row header">
 
-        {% endblock %}
+                <div class="col-xs-4 sidebar-menu-left ">
+                    <div class="text-left">
+                        {% block sidebarMenuLeft %}
+
+                        {% endblock %}
+                    </div>
+                </div>
+
+                {% block header %}
+                <div  class="col-xs-4 logo ">
+                    <img class="logo-image" src="{% static 'BlueHive/images/blueHive_logo.png' %}"/>
+                </div>
+                {% endblock %}
+
+                <div class="col-xs-4 sidebar-menu-right ">
+                    <div class="text-right">
+                        {% block sidebarMenuRight %}
+                        {% if user %}
+                        <h1>{{ user.first_name }} {{ user.last_name}}</h1>
+                        <a class="link" href="{% url 'BlueHive:user_logout' %}">logout</a>
+                        {% endif %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row content">
+                {% block content %}
+
+                {% endblock %}
+            </div>
+        </div>
     </div>
-    </div>
+
     <div class="row footer">
         {% block footer %}
         <p>

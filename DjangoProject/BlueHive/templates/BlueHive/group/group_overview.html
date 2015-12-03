@@ -6,11 +6,11 @@
 
     $(function() {
 
-        $(".click").editable("/group/edit/", {
+        $(".clickEdit").editable("/group/edit/", {
             submitdata: { csrfmiddlewaretoken : "{{ csrf_token }}", _method: "post"},
             select : true,
             submit : 'OK',
-            cancel : 'cancel',
+            cancel : 'Cancel',
             cssclass : "editable"
         });
 
@@ -21,30 +21,58 @@
 
 
 {%  block content %}
-<!--http://www.appelsiini.net/projects/jeditable -->
-<h1>Groups</h1>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">Groups management</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
+            <div class="row">
+                <!--http://www.appelsiini.net/projects/jeditable -->
+                {% if editform %}
 
-{% if editform %}
+                {% endif %}
+                <!-- todo make edit button work -->
+                <p class="category-title-register">Groups</p>
+                {% for group in groups %}
+                <div class="row element-block">
+                    <div class="col-xs-8">
+                        <p class="clickEdit" id="{{ group.id }}">{{ group.value }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="javascript:return false">
+                            <button onclick="document.getElementById({{ group.id }}).click()">Edit</button>
+                        </form>
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="{% url 'BlueHive:group_delete' group.id %}">
+                            <button>Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
 
-{% endif %}
+            <div class="row">
+                <br>
+                <p class="category-title-register">Add a new group</p>
+                <form action="{% url 'BlueHive:group_add' %}" method="post">{% csrf_token %}
+                    <div class="col-xs-8 create-group-input-container">
+                        <input class="full-width text-small" id="{{newusergroupform.value.id_for_label}}" name="{{newusergroupform.value.name}}" placeholder="Group name" type="text" maxlength="{{newusergroupform.fields.value.max_length}}" >
 
-<!-- todo make edit button work -->
-{% for group in groups %}
-<p class="click" style="display: inline" id="{{ group.id }}">{{ group.value }}</p> <p style="display: inline"><a onclick="" href="">edit</a> <a href="{% url 'BlueHive:group_delete' group.id %}">delete</a></p> </br>
-
-{% endfor %}
-
-<h1>Add new group</h1>
-
-<form action="{% url 'BlueHive:group_add' %}" method="post">{% csrf_token %}
-    <ul>
-        {{ newusergroupform.as_ul }}
-    </ul>
-
-    <input type="submit" name="submit" value="Add UserGroup">
-</form>
-
-
-
-
+                        {% if newusergroupform.value.errors %}
+                        {% for error in newusergroupform.value.errors %}
+                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-4 create-group-button-container">
+                        <button class="full-width text-small" type="submit" name="submit">Create group</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+

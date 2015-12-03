@@ -3,39 +3,35 @@
 
 
 {%  block content %}
-<div class="col-xs-12 col-sm-8 col-md-6 col-lg-5 col-centered ">
-    <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title panel-title-login">Login</div>
-            </div>
-            <div class="panel-body">
-                {% if message %}
-                <div class="alert alert-warning">{{message}}</div>
-                {% endif %}
-                <div class="col-xs-8 col-centered ">
-                    <form action="/user/login/" method="post">{% csrf_token %}
-                        <input class="full-width" type="text" placeholder="E-Mail Address" name="email" value="" id="username">
-                        <input class="full-width" type="password" placeholder="Password" name="password" value="" id="password">
-                        <button class="full-width" type="submit">Login</button>
-                    </form>
-                    <p class="text-small text-center">
-                        <!--TODO Show some alert dialog to get password back...-->
-                        <a class="text-white" href="forgot_password.html">Forgot your password?</a>
-                    </p>
-                    <hr class="half-width">
-                    <p class="text-small text-center">
-                        <!--TODO link to company...-->
-                        <a class="text-white" href="explain_company.html">New at company_name?</a>
-                    </p>
-                    <form action="{% url 'BlueHive:user_register' %}">
-                        <button class="full-width">Register now!</button>
-                    </form>
-                </div>
+<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-centered ">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title panel-title-login">Login</div>
+        </div>
+        <div class="panel-body">
+            {% if message %}
+            <div class="alert alert-warning">{{message}}</div>
+            {% endif %}
+            <div class="col-xs-8 col-centered ">
+                <form action="/user/login/" method="post">{% csrf_token %}
+                    <input class="full-width" type="text" placeholder="E-Mail Address" name="email" value="" id="username">
+                    <input class="full-width" type="password" placeholder="Password" name="password" value="" id="password">
+                    <button class="full-width" type="submit">Login</button>
+                </form>
+                <p class="text-very-small text-center">
+                    <!--TODO Show some alert dialog to get password back...-->
+                    <a class="text-white" href="forgot_password.html">Forgot your password?</a>
+                </p>
+                <hr class="half-width">
+                <p class="text-very-small text-center">
+                    <!--TODO link to company...-->
+                    <a class="text-white" href="explain_company.html">New at company_name?</a>
+                </p>
+                <form action="{% url 'BlueHive:user_register' %}">
+                    <button class="full-width">Register now!</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
-
-
 {% endblock %}

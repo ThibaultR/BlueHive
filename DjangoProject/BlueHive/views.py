@@ -218,6 +218,7 @@ def user_data(request):
 
         args['form'] = form
         args['password_form'] = password_form
+        args['user'] = request.user
 
         return render_to_response('BlueHive/user/user_data.html', args)
 
@@ -258,6 +259,7 @@ def admin_users_edit(request, user_id):
         args['form'] = form
         args['password_form'] = password_form
         args['user_id'] = user_id
+        args['user'] = request.user
 
     return render_to_response('BlueHive/admin/admin_users_edit.html', args)
 
@@ -305,6 +307,8 @@ def user_events(request):
     args['new_events'] = Event.objects.filter(user_group=user_groups,
                                               begin_time__gte=timezone.now() + timezone.timedelta(days=-2)).exclude(
         id__in=applied_events_ids).exclude(status=-1).order_by('begin_time', 'name')
+
+    args['user'] = request.user
     return render_to_response('BlueHive/user/user_events.html', args)
 
 
@@ -347,6 +351,7 @@ def event_add(request):
     args = {}
     args.update(csrf(request))
     args['form'] = form
+    args['user'] = request.user
 
     return render_to_response('BlueHive/event/event_add.html', args)
 
@@ -381,6 +386,7 @@ def event_overview(request):
     event_request = EventRequest.objects.filter(event_id__in=events.values("id"))
     args['events'] = events
     args['event_request'] = event_request
+    args['user'] = request.user
 
     return render_to_response('BlueHive/event/event_overview.html', args)
 
@@ -434,6 +440,7 @@ def group_overview(request):
     args.update(csrf(request))
     args['newusergroupform'] = UserGroupForm()
     args['groups'] = UserGroup.objects.all()
+    args['user'] = request.user
 
     return render_to_response('BlueHive/group/group_overview.html', args)
 
@@ -483,6 +490,7 @@ def admin_users(request):
                                                                                                 'first_name')
     args['deactivated_users'] = CustomUser.objects.filter(account_status=-1, is_superuser=0).order_by('last_name',
                                                                                                       'first_name')
+    args['user'] = request.user
 
     return render_to_response('BlueHive/admin/admin_users.html', args)
 

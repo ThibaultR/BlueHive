@@ -30,7 +30,7 @@ class CustomUserCreationForm(UserCreationForm):
         widgets = {'language': forms.CheckboxSelectMultiple,
                    'license': forms.CheckboxSelectMultiple,
                    'birth_date': extras.SelectDateWidget(years=range(datetime.now().year - 70,
-                                                                     datetime.now().year - 16))}
+                                                                     datetime.now().year - 14))}
 
 
 class CustomUserChangeForm(UserChangeForm):
