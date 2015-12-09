@@ -30,7 +30,8 @@ class CustomUserCreationForm(UserCreationForm):
         widgets = {'language': forms.CheckboxSelectMultiple,
                    'license': forms.CheckboxSelectMultiple,
                    'birth_date': extras.SelectDateWidget(years=range(datetime.now().year - 70,
-                                                                     datetime.now().year - 14))}
+                                                                     datetime.now().year - 14))
+                   }
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -160,8 +161,12 @@ class AdminCustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         exclude = ['date_created', 'user_type', 'passport_issue_date', 'passport_expiration_date', 'account_status']
-        widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple,
-                   'birth_date': forms.DateInput, 'user_group': forms.CheckboxSelectMultiple}
+        widgets = {'language': forms.CheckboxSelectMultiple,
+                   'license': forms.CheckboxSelectMultiple,
+                   'user_group': forms.CheckboxSelectMultiple,
+                   # 'birth_date': extras.SelectDateWidget(years=range(datetime.now().year - 70,
+                   #                                                  datetime.now().year - 14))
+                   }
 
     def __init__(self, *args, **kwargs):
         """Init the form."""

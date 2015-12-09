@@ -3,8 +3,5 @@
 
 
 {% block sidebarMenuLeft %}
-        <h2><a href="{% url 'BlueHive:event_overview' %}">Events</a></h2>
-        <h2><a href="{% url 'BlueHive:event_add' %}">Add Event</a></h2>
-        <h2><a href="{% url 'BlueHive:admin_users' %}">Users</a></h2>
-        <h2><a href="{% url 'BlueHive:group_overview' %}">Groups</a></h2>
+        {% include "BlueHive/menu_admin.html" %}
 {% endblock %}

@@ -1,6 +1,6 @@
-{% extends "BlueHive/base_admin.html" %}
-{% block title %}Edit a user{% endblock %}
-
+{% extends "BlueHive/user/user_base.html" %}
+<!--TODO get username-->
+{% block title %}User profile{% endblock %}
 
 {% block head %}
 <script type="text/javascript">
@@ -38,16 +38,119 @@
                 // Make sure that there is no progress bar, etc...
                 thisDropzone.emit("complete", mockFile);
                 thisDropzone.files.push(mockFile);
-
             });
         }
     };
-
 </script>
-
 {% endblock %}
 
-{%  block content %}
+{% block sidebarMenuLeft %}
+{% include "BlueHive/menu_admin.html" %}
+{% endblock %}
+
+<!--TODO get user name-->
+{% block panel-title %}User's profile{% endblock %}
+
+<!--TODO validation on form (if field empty, if not same password...)-->
+{% block dropzone-form-action %}{% url 'BlueHive:user_data_set_profile_picture' user_id %}{% endblock %}
+
+{% block form-action %}{% url 'BlueHive:admin_users_edit' user_id %}{% endblock %}
+
+{% block account-category %}
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+    </div>
+    <div class="col-xs-8">
+        {{ form.email }}
+
+        {% if form.email.errors %}
+        {% for error in form.email.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ password_form.new_password1.id_for_label }}">{{ password_form.new_password1.label }}</label>
+    </div>
+    <div class="col-xs-8 ">
+        {{ password_form.new_password1 }}
+
+        {% if password_form.new_password1.errors %}
+        {% for error in password_form.new_password1.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ password_form.new_password2.id_for_label }}">{{ password_form.new_password2.label }}</label>
+    </div>
+    <div class="col-xs-8">
+        {{ password_form.new_password2 }}
+
+        {% if password_form.new_password2.errors %}
+        {% for error in password_form.new_password2.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ form.user_group.id_for_label }}">{{ form.user_group.label }}</label>
+    </div>
+    <div class="col-xs-8 multiple-checkbox-container">
+        {% for radio in form.user_group %}
+        {{radio}} <br>
+        {% endfor %}
+
+        {% if form.user_group.errors %}
+        {% for error in form.user_group.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ form.rating.id_for_label }}">{{ form.rating.label }}</label>
+    </div>
+    <div class="col-xs-8">
+        <!--TODO try to use nice design (stars, dots...)-->
+        {{ form.rating }}
+
+        {% if form.rating.errors %}
+        {% for error in form.rating.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<!--TODO use selectDateWidget and set default value...-->
+{% endblock %}
+
+<!--TODO get user name-->
+{% block submit-button %}Update user's profile{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <h2>Profile</h2>
 
@@ -174,5 +277,3 @@
     <input type="submit" value="Update" />
 
 </form>
-
-{% endblock %}

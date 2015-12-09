@@ -1,0 +1,304 @@
+{% extends "BlueHive/base.html" %}
+{% block title %}User{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{%  block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">{% block panel-title %}User{% endblock %}</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
+            <div class="row text-center">
+                <!--TODO image should be kept when trying to register with error...-->
+                <!--TODO make image clickable when you want to change picture-->
+                <form action="{% block dropzone-form-action %}/user/{% endblock %}" class="dropzone"  id="my-awesome-dropzone">
+                </form>
+                {% if picturemissing %}
+                <h1>{{ picturemissing }}</h1>
+                {% endif %}
+            </div>
+            <div class="row">
+                <form action="{% block form-action %}/user/{% endblock %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="col-xs-12">
+
+                        <p class="category-title-register">Account</p>
+                        <div class="row category-block-register">
+                            <div class="col-xs-12">
+                                {% block account-category %}
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.email }}
+
+                                        {% if form.email.errors %}
+                                        {% for error in form.email.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8 ">
+                                        {{ form.password1 }}
+
+                                        {% if form.password1.errors %}
+                                        {% for error in form.password1.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.password2 }}
+
+                                        {% if form.password2.errors %}
+                                        {% for error in form.password2.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endblock %}
+                            </div>
+                        </div>
+
+                        <p class="category-title-register">Personnal data</p>
+                        <div class="row category-block-register">
+                            <div class="col-xs-12">
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.first_name }}
+
+                                        {% if form.first_name.errors %}
+                                        {% for error in form.first_name.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.last_name }}
+
+                                        {% if form.last_name.errors %}
+                                        {% for error in form.last_name.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.phone_number }}
+
+                                        {% if form.phone_number.errors %}
+                                        {% for error in form.phone_number.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <!--TODO try to change default to blank-->
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.birth_date.id_for_label }}">{{ form.birth_date.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.birth_date }}
+
+                                        {% if form.birth_date.errors %}
+                                        {% for error in form.birth_date.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.social_security_number.id_for_label }}">{{ form.social_security_number.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.social_security_number }}
+
+                                        {% if form.social_security_number.errors %}
+                                        {% for error in form.social_security_number.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.address }}
+
+                                        {% if form.address.errors %}
+                                        {% for error in form.address.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.zip_code.id_for_label }}">{{ form.zip_code.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.zip_code }}
+
+                                        {% if form.zip_code.errors %}
+                                        {% for error in form.zip_code.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.city.id_for_label }}">{{ form.city.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.city }}
+
+                                        {% if form.city.errors %}
+                                        {% for error in form.city.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.nationality.id_for_label }}">{{ form.nationality.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.nationality }}
+
+                                        {% if form.nationality.errors %}
+                                        {% for error in form.nationality.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="category-title-register">Skills</p>
+                        <div class="row category-block-register">
+                            <div class="col-xs-12">
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.education.id_for_label }}">{{ form.education.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.education }}
+
+                                        {% if form.education.errors %}
+                                        {% for error in form.education.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.job_position.id_for_label }}">{{ form.job_position.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.job_position }}
+
+                                        {% if form.job_position.errors %}
+                                        {% for error in form.job_position.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.work_experience.id_for_label }}">{{ form.work_experience.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        {{ form.work_experience }}
+
+                                        {% if form.work_experience.errors %}
+                                        {% for error in form.work_experience.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.language.id_for_label }}">{{ form.language.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8 multiple-checkbox-container">
+                                        {% for radio in form.language %}
+                                        {{radio}} <br>
+                                        {% endfor %}
+
+                                        {% if form.language.errors %}
+                                        {% for error in form.language.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="row row-eq-height fieldWrapper">
+                                    <div class="col-xs-4 text-right label-container-register">
+                                        <label for="{{ form.license.id_for_label }}">{{ form.license.label }}</label>
+                                    </div>
+                                    <div class="col-xs-8 multiple-checkbox-container">
+                                        {% for radio in form.license %}
+                                        {{radio}} <br>
+                                        {% endfor %}
+
+                                        {% if form.license.errors %}
+                                        {% for error in form.license.errors %}
+                                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row text-center">
+                            <button class="half-width" type="submit">{% block submit-button %}User{% endblock %}</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
