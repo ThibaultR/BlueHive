@@ -5,6 +5,7 @@
 @main-color-light: #64BEFA;
 @second-color: white;
 @negative-color: #FEC8C8;
+@positive-color: #C8FEC8;
 @footer-size: 34px;
 
 html,body{
@@ -34,9 +35,6 @@ html,body{
 }
 
 .row-eq-height {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -119,17 +117,11 @@ html,body{
   height: 25%;
   text-align: center;
 
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   align-items: center;
 }
 
 .header .sidebar-menu-left {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -151,9 +143,6 @@ html,body{
 }
 
 .header .logo {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -164,9 +153,6 @@ html,body{
 }
 
 .header .sidebar-menu-right {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -211,9 +197,6 @@ html,body{
 }
 
 .element-block {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   align-items: center;
   background-color: @second-color;
@@ -240,7 +223,7 @@ html,body{
   .full-width;
 }
 
-.element-block form button, .element-block-details form button {
+.element-block form button, .element-block-details form button{
   display: inline-block;
   font-size: 16px;
   font-weight: normal;
@@ -250,9 +233,6 @@ html,body{
 }
 
 .element-block-title {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   align-items: center;
   margin: 0;
@@ -275,6 +255,11 @@ html,body{
   padding: 5px;
   margin: -5px 0px 5px;
   font-size: 16px;
+  /*height:0px;
+  overflow: hidden;
+  display: none;
+  transition: height;
+  transition-duration: 2s;*/
   .text-main-color;
 }
 
@@ -303,7 +288,7 @@ html,body{
   padding: 25px;
 }
 
-select, input, button {
+textarea, select, input, button {
   border: none;
   padding: 5px;
 }
@@ -313,7 +298,7 @@ input, button {
   font-size: 20px;
 }
 
-select, input {
+textarea, select, input {
   color: @main-color;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -353,7 +338,7 @@ form {
   .text-white;
 }
 
-.fieldWrapper input:not([type=checkbox]) {
+.fieldWrapper input:not([type=checkbox]), .fieldWrapper textarea {
   font-size: 16px;
   margin: 2px 0px;
   .full-width;
@@ -365,9 +350,6 @@ form {
 }
 
 .label-container-register {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -433,4 +415,53 @@ form {
 .create-group-button-container {
   padding-right: 7px;
   padding-left: 2px;
+}
+
+/***************************
+    Event Overiview
+***************************/
+.user-block {
+  border: 2px solid @main-color;
+  padding: 10px 0px;
+  margin-bottom: 15px;
+}
+
+.user-block-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  .text-main-color
+}
+
+.user-block .element-block {
+  background-color: @main-color;
+  .text-white;
+}
+
+.user-block .element-block-title p {
+  color: @main-color;
+}
+
+.label-radio-event-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.label-radio-event {
+  margin: 0px;
+  padding: 5px;
+  border: none;
+  color: @second-color;
+  background-color: @main-color-light;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.label-radio-event input[type=radio] {
+  display: none;
+}
+
+.label-radio-event-checked {
+  background-color: @positive-color;
+  .text-main-color;
 }

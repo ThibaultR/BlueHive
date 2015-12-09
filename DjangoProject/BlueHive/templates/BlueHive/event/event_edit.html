@@ -1,17 +1,8 @@
-{% extends "BlueHive/base_admin.html" %}
-{% block title %}Edit Event{% endblock %}
+{% extends "BlueHive/event/event_base.html" %}
+{% block title %}Event edition{% endblock %}
 
+{% block panel-title %}Event edition{% endblock %}
 
-{%  block content %}
+{% block form-action %}{% url 'BlueHive:event_edit' event_id %}{% endblock %}
 
-    <h1>Modify your event here</h1>
-
-    <form action="{% url 'BlueHive:event_edit' event_id %}"method="post">{% csrf_token %}
-        <ul>
-            {{ form.as_ul }}
-        </ul>
-
-        <input type="submit" name="submit" value="Edit Event">
-    </form>
-
-{% endblock %}
+{% block submit-button %}Edit event{% endblock %}

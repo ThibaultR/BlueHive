@@ -39,6 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'BlueHive',
     'smartfields',
+    'dajaxice',
+    'dajax',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -102,6 +104,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
+STATIC_ROOT = './BlueHive/static/BlueHive'
 
 # AUTH_PROFILE_MODULE = 'BlueHive.UserProfile'
 AUTH_USER_MODEL = 'BlueHive.CustomUser'

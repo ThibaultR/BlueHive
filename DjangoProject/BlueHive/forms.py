@@ -182,6 +182,9 @@ class EventForm(forms.ModelForm):
         model = Event
         exclude = ['status']
         # fields = '__all__'
+        widgets = {'description': forms.Textarea(attrs={'rows': 4}),
+                   'begin_time': extras.SelectDateWidget(years=range(datetime.now().year,
+                                                                     datetime.now().year + 10))}
 
 
 class EventRequestForm(forms.ModelForm):

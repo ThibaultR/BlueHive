@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 from smartfields import fields
 from smartfields.dependencies import FileDependency
 from smartfields.processors import ImageProcessor
+from datetime import datetime
 import os
 import uuid
 from django.conf import settings
@@ -124,7 +125,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=254)
     zip_code = models.CharField(max_length=254)
     city = models.CharField(max_length=254)
-    nationality = models.ForeignKey(Nationality, default=198)
+    nationality = models.ForeignKey(Nationality)
     education = models.CharField(max_length=254)
     job_position = models.CharField(max_length=254, blank=True)
     work_experience = models.CharField(max_length=254, blank=True)
@@ -205,7 +206,7 @@ class Event(models.Model):
     comment = models.CharField(max_length=254, blank=True)
     description = models.TextField(max_length=254, blank=True)
     location = models.CharField(max_length=254)
-    begin_time = models.DateTimeField()
+    begin_time = models.DateTimeField(default=datetime.now())
     end_time = models.CharField(max_length=254)
     user_group = models.ForeignKey(UserGroup, default=1)
     # -1 killed, 0 nothing done, 1 users set, 2 times users set, 3 everything ok
