@@ -2,7 +2,6 @@
 {% block title %}Event{% endblock %}
 
 
-
 {%  block content %}
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -98,11 +97,11 @@
                                 <div class="row row-eq-height fieldWrapper">
                                     <div class="col-xs-4 text-right label-container-register">
                                         <label for="{{ form.begin_time.id_for_label }}">{{ form.begin_time.label }}</label>
+
                                     </div>
                                     <div class="col-xs-8">
                                         <!--TODO take care of time, not only date-->
                                         {{ form.begin_time }}
-
                                         {% if form.begin_time.errors %}
                                         {% for error in form.begin_time.errors %}
                                         <div class="alert alert-danger alert-small">{{ error|escape }}</div>

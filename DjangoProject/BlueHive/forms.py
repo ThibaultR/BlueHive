@@ -4,6 +4,7 @@ from django import forms
 from django.forms import extras
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from BlueHive.models import CustomUser, Event, UserGroup, EventRequest, NewProfilePicture
+from datetimewidget.widgets import DateTimeWidget, DateWidget, TimeWidget
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 MY_DATE_FORMATS = ['%d.%m.%Y', ]
@@ -23,6 +24,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
+
         fields = ['email', 'first_name', 'last_name', 'phone_number', 'birth_date', 'social_security_number', 'address',
                   'zip_code',
                   'city', 'nationality', 'education', 'job_position', 'work_experience', 'language', 'license',
@@ -50,7 +52,9 @@ class CustomUserChangeForm(UserChangeForm):
         exclude = ['date_created', 'rating', 'user_type', 'passport_issue_date', 'passport_expiration_date',
                    'user_group', 'account_status', 'email']
         widgets = {'language': forms.CheckboxSelectMultiple, 'license': forms.CheckboxSelectMultiple,
-                   'birth_date': forms.DateInput}
+                   'birth_date': extras.SelectDateWidget(years=range(datetime.now().year - 70,
+                                                                     datetime.now().year - 14))
+                   }
 
     def __init__(self, *args, **kwargs):
         """Init the form."""
@@ -160,12 +164,18 @@ class AdminCustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
+        dateOptions = {
+            'format': 'yyyy-mm-dd',
+            'endDate': datetime.now().strftime('%Y-%m-%d'),
+            'autoclose': True,
+            'showMeridian' : True
+        }
         exclude = ['date_created', 'user_type', 'passport_issue_date', 'passport_expiration_date', 'account_status']
         widgets = {'language': forms.CheckboxSelectMultiple,
                    'license': forms.CheckboxSelectMultiple,
                    'user_group': forms.CheckboxSelectMultiple,
-                   # 'birth_date': extras.SelectDateWidget(years=range(datetime.now().year - 70,
-                   #                                                  datetime.now().year - 14))
+                   'birth_date': extras.SelectDateWidget(years=range(datetime.now().year - 70,
+                                                                     datetime.now().year - 14))
                    }
 
     def __init__(self, *args, **kwargs):
@@ -186,10 +196,18 @@ class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         exclude = ['status']
+        #TODO validate that date is not in past also in the backend
+        dateTimeOptions = {
+            'format': 'yyyy-mm-dd hh:ii',
+            'startDate': datetime.now().strftime('%Y-%m-%d'),
+            'autoclose': True,
+            'showMeridian' : True
+        }
+
         # fields = '__all__'
         widgets = {'description': forms.Textarea(attrs={'rows': 4}),
-                   'begin_time': extras.SelectDateWidget(years=range(datetime.now().year,
-                                                                     datetime.now().year + 10))}
+                   'begin_time': DateTimeWidget(options=dateTimeOptions, bootstrap_version=3)}
+
 
 
 class EventRequestForm(forms.ModelForm):

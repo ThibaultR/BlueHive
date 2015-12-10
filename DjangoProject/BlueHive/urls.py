@@ -3,7 +3,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    url(r'^$', 'BlueHive.views.user_login'),
+    url(r'^$', 'BlueHive.views.root_url', name='home'),
+    url(r'^user/tos/$', 'BlueHive.views.user_terms_of_use', name='user_terms_of_use'),
+    url(r'^user/site_notice/$', 'BlueHive.views.user_site_notice', name='user_site_notice'),
     url(r'^user/login/$', 'BlueHive.views.user_login', name='user_login'),
     url(r'^user/logout/$', 'BlueHive.views.user_logout', name='user_logout'),
     url(r'^user/register/$', 'BlueHive.views.user_register', name='user_register'),

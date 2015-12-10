@@ -218,6 +218,9 @@ class Event(models.Model):
     def get_event_requests(self):
         return EventRequest.objects.filter(event_id=self.id)
 
+    def get_event_requests_amount_user_accepted(self):
+        return EventRequest.objects.filter(event_id=self.id, status=1)
+
 
 class EventRequest(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)

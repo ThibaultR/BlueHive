@@ -44,8 +44,7 @@
                 </div>
                 <div class="row element-block-details">
                     <div class="col-xs-12">
-                        <!--TODO get values-->
-                        <p class="text-smaller">({{ event.get_event_requests|length }} users applied / Y users accepted)</p>
+                        <p class="text-smaller">({{ event.get_event_requests|length }} users applied /   {{ event.get_event_requests_amount_user_accepted|length }} users accepted)</p>
                         {% if event.get_event_requests %}
                         <div class="row">
                             <div class="col-xs-12">

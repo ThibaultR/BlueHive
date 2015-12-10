@@ -13,6 +13,7 @@ from django.conf import settings
 from django.template import RequestContext
 from django.middleware.csrf import rotate_token  # for changing csrf token
 import shutil, os
+from datetime import datetime
 
 
 def admin_check(user):
@@ -21,6 +22,16 @@ def admin_check(user):
 
 def active_user_check(user):
     return user.account_status == 1
+
+def root_url(request):
+    if request.user.id:
+        actUser = get_object_or_404(CustomUser, pk=request.user.id)
+        # check if the request comes from the admin
+        if actUser.account_status == 1 and actUser.is_superuser == 1:
+            return HttpResponseRedirect('/event/overview')
+        if actUser.account_status == 1 and actUser.is_superuser != 1:
+            return HttpResponseRedirect('user/events/')
+    return HttpResponseRedirect('user/login/')
 
 
 def user_login(request):
@@ -166,6 +177,7 @@ def user_data_set_profile_picture(request, user_id):
 
 @login_required
 def user_data_get_profile_picture(request, user_id):
+    print 'hallo'
     if request.method == 'POST':
         actUser = get_object_or_404(CustomUser, pk=request.user.id)
         # check if the request comes from the admin
@@ -184,6 +196,11 @@ def user_data_get_profile_picture(request, user_id):
 def user_register_success(request):
     return render_to_response('BlueHive/user/register_success.html')
 
+def user_terms_of_use(request):
+    return render_to_response('BlueHive/user/terms_of_use.html')
+
+def user_site_notice(request):
+    return render_to_response('BlueHive/user/site_notice.html')
 
 @login_required
 def user_data(request):
@@ -247,8 +264,13 @@ def admin_users_edit(request, user_id):
             return HttpResponseRedirect('/admin/users/')
         else:
             print form.errors
-            return render(request, 'BlueHive/admin/admin_users_edit.html',
-                          {'form': form, 'password_form': password_form})
+            args = {}
+            args.update(csrf(request))
+            args['form'] = form
+            args['password_form'] = password_form
+            args['user_id'] = user_id
+            args['user'] = request.user
+            return render(request, 'BlueHive/admin/admin_users_edit.html',args)
     else:
         form = AdminCustomUserChangeForm(instance=get_object_or_404(CustomUser, pk=user_id))
         # http://ruddra.com/2015/09/18/implementation-of-forgot-reset-password-feature-in-django/
@@ -357,10 +379,6 @@ def event_add(request):
     return render_to_response('BlueHive/event/event_add.html', args)
 
 
-@user_passes_test(admin_check)
-def event(request, event_id):
-    return render_to_response('BlueHive/event/event_detail.html', {'event': Event.objects.get(id=event_id)})
-
 
 @user_passes_test(admin_check)
 def event_overview(request):
@@ -384,9 +402,7 @@ def event_overview(request):
     args.update(csrf(request))
     events = Event.objects.filter(begin_time__gte=timezone.now() + timezone.timedelta(days=-2)).exclude(
         status=-1).order_by('begin_time', 'name')
-    event_request = EventRequest.objects.filter(event_id__in=events.values("id"))
     args['events'] = events
-    args['event_request'] = event_request
     args['user'] = request.user
 
     return render_to_response('BlueHive/event/event_overview.html', args)

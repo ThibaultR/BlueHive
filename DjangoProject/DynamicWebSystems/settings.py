@@ -39,8 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'BlueHive',
     'smartfields',
-    'dajaxice',
-    'dajax',
+    'datetimewidget',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -52,6 +51,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'DynamicWebSystems.urls'
