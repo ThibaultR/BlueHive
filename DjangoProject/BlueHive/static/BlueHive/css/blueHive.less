@@ -206,6 +206,7 @@ html,body{
 }
 
 .element-block {
+  word-wrap: break-word;
   display: flex;
   align-items: center;
   background-color: @second-color;
@@ -259,17 +260,23 @@ html,body{
 }
 
 .element-block-details {
+  word-wrap: break-word;
   background-color: @second-color;
   border: none;
   padding: 5px;
   margin: -5px 0px 5px;
   font-size: 16px;
-  /*height:0px;
-  overflow: hidden;
   display: none;
-  transition: height;
-  transition-duration: 2s;*/
+  overflow: hidden;
+  transition: max-height 1s ease;
   .text-main-color;
+}
+
+.element-blocks-details-opened {
+  max-height: 500px;
+}
+.element-blocks-details-closed {
+  max-height: 0px;
 }
 
 /***************************

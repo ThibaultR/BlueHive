@@ -42,7 +42,6 @@
                         <p class="text-smaller text-center">{{ event.end_time }}</p>
                     </div>
                 </div>
-                <!--TODO show only on click (slider)-->
                 <div class="row element-block-details">
                     <div class="col-xs-12">
                         <!--TODO get values-->
@@ -136,7 +135,6 @@
                             <div class="col-xs-3">
                                 <form action="{% url 'BlueHive:event_status' %}" method="post">{% csrf_token %}
                                     <input type="hidden" name="event_id" value="{{ event.id }}">
-                                    <!--TODO isnt that deleting ?-->
                                     <button class="negative-color" type="submit" name="value" value="deactivate">Deactivate</button>
                                 </form>
                             </div>

@@ -292,7 +292,7 @@ def user_events_apply(request, event_id):
 
     return HttpResponseRedirect('/user/events/')
 
-
+# TODO check if normal when connected with admin and put /user in url bar, access to user profile...
 @login_required
 def user_events(request):
     args = {}
