@@ -3,18 +3,14 @@
 
 {% block head %}
 <script type="text/javascript" charset="utf-8">
-
     $(function() {
-
-        $(".clickEdit").editable("/group/edit/", {
+        $(".clickEdit").editable("{% url 'BlueHive:group_edit' %}", {
             submitdata: { csrfmiddlewaretoken : "{{ csrf_token }}", _method: "post"},
             select : true,
-            submit : 'OK',
-            cancel : 'Cancel',
+            submit : '<div class="col-xs-6"><button type="submit">OK</button></div>',
+            cancel : '<div class="col-xs-6"><button type="cancel">Cancel</button></div>',
             cssclass : "editable"
         });
-
-
     });
 </script>
 {% endblock %}
@@ -28,11 +24,6 @@
     <div class="panel-body">
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
             <div class="row">
-                <!--http://www.appelsiini.net/projects/jeditable -->
-                {% if editform %}
-
-                {% endif %}
-                <!-- todo make edit button work -->
                 <p class="category-title-register">Groups</p>
                 {% for group in groups %}
                 <div class="row element-block">

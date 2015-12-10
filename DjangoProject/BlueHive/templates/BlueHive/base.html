@@ -45,7 +45,7 @@
                         <!--TODO fix : appear on register page after failed attempt to register...-->
                         {% if user %}
                         <h1>{{ user.first_name }} {{ user.last_name}}</h1>
-                        <a class="link" href="{% url 'BlueHive:user_logout' %}">logout</a>
+                        <a class="text-main-color-light" href="{% url 'BlueHive:user_logout' %}">logout</a>
                         {% endif %}
                         {% endblock %}
                     </div>
@@ -62,6 +62,7 @@
 
     <div class="row footer">
         {% block footer %}
+        <!--TODO link to real pages-->
         <p>
             <a class="text-white" href="company_website.html">company_website</a> |
             <a class="text-white" href="explain_company.html">Tutorial</a> |

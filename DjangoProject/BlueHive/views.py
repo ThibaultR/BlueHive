@@ -269,6 +269,7 @@ def user_events_apply(request, event_id):
     event_id = int(event_id)
     if request.method == 'POST':
         # TODO security of user_comment parameter
+        # TODO use a form variable like the other form
         user_comment = request.POST.get('user_comment')
         # check if user is allowed to be part of this event
         try:

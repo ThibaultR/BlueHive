@@ -6,6 +6,7 @@
 @second-color: white;
 @negative-color: #FEC8C8;
 @positive-color: #C8FEC8;
+@waiting-color: #C8E6FF;
 @footer-size: 34px;
 
 html,body{
@@ -74,8 +75,17 @@ html,body{
   color: @main-color;
 }
 
+.text-main-color-light {
+  color: @main-color-light;
+}
+
 .text-white {
   color: @second-color;
+}
+
+.positive-color {
+  color: @main-color;
+  background-color: @positive-color;
 }
 
 .negative-color {
@@ -85,17 +95,21 @@ html,body{
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
   color:    @main-color;
+  .text-italic;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
   color:    @main-color;
   opacity:  1;
+  .text-italic;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
   color:    @main-color;
   opacity:  1;
+  .text-italic;
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
   color:    @main-color;
+  .text-italic;
 }
 
 .alert-small {
@@ -104,7 +118,7 @@ html,body{
 }
 
 .main-background {
-  background-image: url("../images/background_blur.jpg");
+  background-image: url("../images/background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -163,11 +177,6 @@ html,body{
   .text-bold;
   .text-main-color;
 }
-
-.header .sidebar-menu-right .link {
-  .text-white;
-}
-
 
 .not-footer {
   min-height: 100%;
@@ -398,10 +407,9 @@ form {
 /***************************
     Override Jeditable
 ***************************/
-.editable {
-}
-
-.editable button {
+//.editable is on the form tag
+.editable-small input{
+  .text-smaller;
 }
 
 /***************************
@@ -438,7 +446,7 @@ form {
   .text-white;
 }
 
-.user-block .element-block-title p {
+.user-block .element-block-title p, .event-info-block .element-block-title p {
   color: @main-color;
 }
 
@@ -464,4 +472,32 @@ form {
 .label-radio-event-checked {
   background-color: @positive-color;
   .text-main-color;
+}
+
+/***************************
+    User events list
+***************************/
+.positive-event {
+  background-color: @positive-color;
+}
+
+.waiting-event {
+  background-color: @waiting-color;
+}
+
+.negative-event {
+  background-color: @negative-color;
+}
+
+.apply-event-button-container {
+  padding: 0 0 0 2px;
+}
+
+.apply-event-input-container {
+  padding: 0 2px 0 0;
+}
+
+.element-block-details .apply-event-button-container > button {
+  padding: 5px;
+  margin: 5px 0;
 }
