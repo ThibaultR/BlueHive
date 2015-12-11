@@ -420,6 +420,22 @@ form {
 }
 
 /***************************
+    Override Date Time picker
+***************************/
+.input-group > *{
+  background-color: @second-color;
+  border-top: none;
+  border-bottom: none;
+  border-radius: 0;
+}
+
+.input-group > .form-control[readonly] {
+   background-color: @second-color;
+   color: #4d97c8;
+   padding: 5px;
+}
+
+/***************************
     Group Overiview
 ***************************/
 .create-group-input-container {
