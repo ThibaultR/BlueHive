@@ -50,7 +50,7 @@
 {% block panel-title %}Profile{% endblock %}
 
 <!--TODO shouldn't disconnect after change password-->
-{% block dropzone-form-action %}{% url 'BlueHive:user_data_get_profile_picture' 0 %}{% endblock %}
+{% block dropzone-form-action %}{% url 'BlueHive:user_data_set_profile_picture' 0 %}{% endblock %}
 
 {% block form-action %}{% url 'BlueHive:user_data' %}{% endblock %}
 

@@ -199,14 +199,15 @@ class EventForm(forms.ModelForm):
         #TODO validate that date is not in past also in the backend
         dateTimeOptions = {
             'format': 'yyyy-mm-dd hh:ii',
-            'startDate': datetime.now().strftime('%Y-%m-%d'),
+            'startDate': datetime.now().strftime('%Y-%m-%d M'),
             'autoclose': True,
-            'showMeridian' : True
+            'showMeridian': True
         }
 
         # fields = '__all__'
         widgets = {'description': forms.Textarea(attrs={'rows': 4}),
                    'begin_time': DateTimeWidget(options=dateTimeOptions, bootstrap_version=3)}
+
 
 
 

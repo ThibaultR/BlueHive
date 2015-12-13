@@ -216,10 +216,10 @@ class Event(models.Model):
         return self.name
 
     def get_event_requests(self):
-        return EventRequest.objects.filter(event_id=self.id)
+        return EventRequest.objects.filter(event_id=self.id, user_id__account_status=1)
 
     def get_event_requests_amount_user_accepted(self):
-        return EventRequest.objects.filter(event_id=self.id, status=1)
+        return EventRequest.objects.filter(event_id=self.id, status=1, user_id__account_status=1)
 
 
 class EventRequest(models.Model):

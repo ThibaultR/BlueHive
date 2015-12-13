@@ -177,7 +177,6 @@ def user_data_set_profile_picture(request, user_id):
 
 @login_required
 def user_data_get_profile_picture(request, user_id):
-    print 'hallo'
     if request.method == 'POST':
         actUser = get_object_or_404(CustomUser, pk=request.user.id)
         # check if the request comes from the admin
@@ -303,6 +302,7 @@ def user_events_apply(request, event_id):
                 try:
                     EventRequest.objects.get(event_id=event_id, user_id=request.user.id)
                 except EventRequest.DoesNotExist:
+                    print 'here'
                     # now the new Eventrequest can be created
                     myEventRequest = EventRequest()
                     myEventRequest.event_id = event
@@ -324,12 +324,12 @@ def user_events(request):
     user_groups = request.user.user_group.all()
     args['applied_events'] = EventRequest.objects.filter(user_id=request.user,
                                                          event_id__begin_time__gte=timezone.now() + timezone.timedelta(
-                                                             days=-2)).exclude(event_id__status=-1)
+                                                                 days=-2)).exclude(event_id__status=-1)
     applied_events_ids = EventRequest.objects.values_list('event_id', flat=True).filter(user_id=request.user).order_by(
-        'begin_time', 'name')
+            'begin_time', 'name')
     args['new_events'] = Event.objects.filter(user_group=user_groups,
-                                              begin_time__gte=timezone.now() + timezone.timedelta(days=-2)).exclude(
-        id__in=applied_events_ids).exclude(status=-1).order_by('begin_time', 'name')
+                                              begin_time__gte=timezone.now()).exclude(
+            id__in=applied_events_ids).exclude(status=-1).order_by('begin_time', 'name')
 
     args['user'] = request.user
     return render_to_response('BlueHive/user/user_events.html', args)
@@ -533,7 +533,7 @@ def admin_users_status(request):
                 return HttpResponseRedirect('/admin/users/')
         elif value == 'delete':
             # delete this user when his actual account_status == 0
-            if actUser.account_status == 0:
+            if actUser.account_status == 0 or actUser.account_status == -1:
                 actUser.delete()
                 return HttpResponseRedirect('/admin/users/')
         elif value == 'edit':
