@@ -1,6 +1,13 @@
 from django.conf.urls import url, include
 from django.conf import settings
+from tastypie.api import Api
+from BlueHive.api import EventResource, UserResource, EventRequestResource
 from django.conf.urls.static import static
+
+v1_api = Api(api_name='v1')
+v1_api.register(EventResource())
+v1_api.register(UserResource())
+v1_api.register(EventRequestResource())
 
 urlpatterns = [
     url(r'^$', 'BlueHive.views.root_url', name='home'),
@@ -30,4 +37,5 @@ urlpatterns = [
     url(r'^admin/users/status/$', 'BlueHive.views.admin_users_status', name='admin_users_status'),
     url(r'^admin/users/edit/(?P<user_id>\d+)/$', 'BlueHive.views.admin_users_edit', name='admin_users_edit'),
     url(r'^group/delete/(?P<group_id>\d+)/$', 'BlueHive.views.group_delete', name='group_delete'),
+    url(r'^api/', include(v1_api.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -40,6 +40,8 @@ INSTALLED_APPS = (
     'BlueHive',
     'smartfields',
     'datetimewidget',
+    'tastypie',
+    'tastypie_swagger',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -110,6 +112,9 @@ STATIC_ROOT = './BlueHive/static/BlueHive'
 AUTH_USER_MODEL = 'BlueHive.CustomUser'
 LOGIN_URL='/'
 LOGIN_REDIRECT_URL='/'
+
+# Specify tastypie formats
+TASTYPIE_DEFAULT_FORMATS = ['json']
 
 # TODO change to special media file
 MEDIA_ROOT = '.'

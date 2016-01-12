@@ -11,6 +11,8 @@ from smartfields.dependencies import FileDependency
 from smartfields.processors import ImageProcessor
 from datetime import datetime
 import os
+from django.db.models import signals
+from tastypie.models import create_api_key
 import uuid
 from django.conf import settings
 
@@ -179,6 +181,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):  # __unicode__ on Python 2
         return self.email
+
+signals.post_save.connect(create_api_key, sender=CustomUser)
+
+
 
 
 class NewProfilePicture(models.Model):
