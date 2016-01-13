@@ -41,7 +41,6 @@ INSTALLED_APPS = (
     'smartfields',
     'datetimewidget',
     'tastypie',
-    'tastypie_swagger',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -115,6 +114,7 @@ LOGIN_REDIRECT_URL='/'
 
 # Specify tastypie formats
 TASTYPIE_DEFAULT_FORMATS = ['json']
+TASTYPIE_FULL_DEBUG = True
 
 # TODO change to special media file
 MEDIA_ROOT = '.'
