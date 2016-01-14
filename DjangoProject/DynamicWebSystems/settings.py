@@ -102,6 +102,9 @@ USE_L10N = True
 USE_TZ = True
 
 
+#Tastypie default format
+TASTYPIE_DEFAULT_FORMATS = ['json']
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
