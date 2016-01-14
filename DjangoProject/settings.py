@@ -24,7 +24,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -38,6 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'BlueHive',
     'smartfields',
+    'datetimewidget',
+    'tastypie',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -90,6 +92,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+TASTYPIE_DEFAULT_FORMATS = ['json']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
