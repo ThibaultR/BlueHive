@@ -1,1 +1,0 @@
-http://stefanimhoff.de/2008/lokalisierung-von-projekten-mit-django/
