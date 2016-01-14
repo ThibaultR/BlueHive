@@ -1,0 +1,196 @@
+{% extends "BlueHive/base_admin.html" %}
+{% block title %}Manage Users{% endblock %}
+
+
+
+{%  block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">Newly registered users</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
+            <div class="row">
+                {% if new_users %}
+                <div class="row element-block-title">
+                    <div class="col-xs-3">
+                        <p>Name</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p>City</p>
+                    </div>
+                    <div class="col-xs-1">
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                </div>
+                {% for user in new_users %}
+                <div class="row element-block">
+                    <div class="col-xs-3">
+                        <p>{{ user.last_name }} {{ user.first_name }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p class="text-small">{{ user.city }}</p>
+                    </div>
+                    <div class="col-xs-1">
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" name="value" value="show">Show</button>
+                        </form>
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" name="value" value="activate">Activate</button>
+                        </form>
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button class="negative-color" type="submit" name="value" value="delete">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="category-title-register">No newly registered users.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">Activated users</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
+            <div class="row">
+                {% if active_users %}
+                <div class="row element-block-title">
+                    <div class="col-xs-3">
+                        <p>Name</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p>City</p>
+                    </div>
+                    <div class="col-xs-1">
+                        <p>Rating</p>
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                </div>
+                {% for user in active_users %}
+                <div class="row element-block">
+                    <div class="col-xs-3">
+                        <p>{{ user.last_name }} {{ user.first_name }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p class="text-small">{{ user.city }}</p>
+                    </div>
+                    <div class="col-xs-1">
+                        <p class="text-small">{{ user.rating.value }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" name="value" value="edit">Show</button>
+                        </form>
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button class="negative-color" type="submit" name="value" value="deactivate">Deactivate</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="category-title-register">No activated users.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">Deactivated users</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
+            <div class="row">
+                {% if deactivated_users %}
+                <div class="row element-block-title">
+                    <div class="col-xs-3">
+                        <p>Name</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p>City</p>
+                    </div>
+                    <div class="col-xs-1">
+                        <p>Rating</p>
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                    <div class="col-xs-2">
+                    </div>
+                </div>
+                {% for user in deactivated_users %}
+                <div class="row element-block">
+                    <div class="col-xs-3">
+                        <p>{{ user.last_name }} {{ user.first_name }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p class="text-small">{{ user.city }}</p>
+                    </div>
+                    <div class="col-xs-1">
+                        <p class="text-small">{{ user.rating.value }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" name="value" value="edit">Show</button>
+                        </form>
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" name="value" value="activate">Activate</button>
+                        </form>
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button class="negative-color" type="submit" name="value" value="delete">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="category-title-register">No deactivated users.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

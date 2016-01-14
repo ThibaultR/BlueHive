@@ -1,0 +1,8 @@
+{% extends "BlueHive/event/event_base.html" %}
+{% block title %}Event edition{% endblock %}
+
+{% block panel-title %}Event edition{% endblock %}
+
+{% block form-action %}{% url 'BlueHive:event_edit' event_id %}{% endblock %}
+
+{% block submit-button %}Edit event{% endblock %}

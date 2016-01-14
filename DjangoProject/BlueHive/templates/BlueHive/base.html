@@ -1,0 +1,79 @@
+{% load static %}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'favicon.png' %}"/>
+    <title>{% block title %}My Base Template {% endblock %}</title>
+    <script src="{% static 'BlueHive/js/jquery.min.js' %}" type="text/javascript"> </script>
+    <script src="{% static 'BlueHive/js/jquery.jeditable.mini.js' %}" type="text/javascript"> </script>
+    <script src="{% static 'BlueHive/js/jquery.dajax.core.js' %}" type="text/javascript"> </script>
+    <script src="{% static 'BlueHive/js/bootstrap.min.js' %}" type="text/javascript"> </script>
+    <script src="{% static 'BlueHive/js/dropzone.js' %}"></script>
+    <script src="{% static 'BlueHive/js/BlueHive.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'BlueHive/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'BlueHive/css/dropzone.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'BlueHive/css/blueHive.css' %}">
+    <link rel="shortcut icon" href="{%  static 'BlueHive/favicon/favicon.ico' %}">
+
+    {{ form.media }}
+
+    {% block head %} {% endblock %}
+
+</head>
+<body class="main-background">
+
+<div class="container-fluid full-height main-background-blur scrollable" >
+    <div class="row not-footer">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-centered ">
+            <div class="row header">
+
+                <div class="col-xs-4 sidebar-menu-left ">
+                    <div class="text-left">
+                        <!--TODO make menu entry blue when it's the current page-->
+                        {% block sidebarMenuLeft %}
+
+                        {% endblock %}
+                    </div>
+                </div>
+
+                {% block header %}
+                <div  class="col-xs-4 logo ">
+                    <img class="logo-image" src="{% static 'BlueHive/images/blueHive_logo.png' %}"/>
+                </div>
+                {% endblock %}
+
+                <div class="col-xs-4 sidebar-menu-right ">
+                    <div class="text-right">
+                        {% block sidebarMenuRight %}
+                        {% if user.is_authenticated %}
+                        <h1>{{ user.first_name }} {{ user.last_name}}</h1>
+                        <a class="text-main-color-light" href="{% url 'BlueHive:user_logout' %}">logout</a>
+                        {% endif %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row content">
+                {% block content %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row footer">
+        {% block footer %}
+        <!--TODO link to real pages-->
+        <p>
+            <a class="text-white" href="{% url 'BlueHive:home' %}">company website</a> |
+            <a class="text-white" href="{% static 'BlueHive/Tutorial.pdf' %}">Tutorial</a> |
+            <a class="text-white" href="{% url 'BlueHive:user_terms_of_use' %}">Terms of use</a> |
+            <a class="text-white" href="{% url 'BlueHive:user_site_notice' %}">Site notice</a>
+        </p>
+        {% endblock %}
+    </div>
+</div>
+
+</body>
+</html>

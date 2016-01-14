@@ -1,0 +1,84 @@
+{% extends "BlueHive/user/user_base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block head %}
+<script type="text/javascript">
+    Dropzone.options.myAwesomeDropzone = {
+        paramName: "file", // The name that will be used to transfer the file
+        dictResponseError: "Your profile picture was not accepted from the server. Please use another one.",
+        dictDefaultMessage: "Drop your profile picture here",
+        acceptedFiles: "image/jpeg,image/png",
+        maxFilesize: 4, // MB
+        maxFiles: 1,
+        thumbnailWidth:"250",
+        thumbnailHeight:"250",
+        accept: function(file, done) {
+            console.log("uploaded");
+            done();
+        },
+        init: function() {
+            this.on("maxfilesexceeded", function(file) {
+                this.removeAllFiles();
+                this.addFile(file);
+            });
+            this.on("sending", function(file, xhr, formData) {
+                // Will send the filesize along with the file as POST data.
+                formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+            });
+        }
+    };
+</script>
+{% endblock %}
+
+{% block panel-title %}Register{% endblock %}
+
+{% block dropzone-form-action %}{% url 'BlueHive:user_data_set_profile_picture' 0 %}{% endblock %}
+
+{% block form-action %}{% url 'BlueHive:user_register' %}{% endblock %}
+
+{% block account-category %}
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+    </div>
+    <div class="col-xs-8">
+        {{ form.email }}
+
+        {% if form.email.errors %}
+        {% for error in form.email.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+    </div>
+    <div class="col-xs-8 ">
+        {{ form.password1 }}
+
+        {% if form.password1.errors %}
+        {% for error in form.password1.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+    </div>
+    <div class="col-xs-8">
+        {{ form.password2 }}
+
+        {% if form.password2.errors %}
+        {% for error in form.password2.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block submit-button %}Register{% endblock %}

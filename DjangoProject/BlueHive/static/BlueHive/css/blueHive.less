@@ -1,0 +1,526 @@
+/***************************
+    Common
+***************************/
+@main-color: #4D97C8;
+@main-color-light: #64BEFA;
+@second-color: white;
+@negative-color: #FEC8C8;
+@positive-color: #C8FEC8;
+@waiting-color: #C8E6FF;
+@footer-size: 34px;
+
+html,body{
+  height:100%;
+}
+
+.full-height {
+  min-height: 100%;
+  height: 100%;
+}
+
+.full-width {
+  min-width: 100%;
+  width: 100%;
+}
+
+.half-width {
+  width: 50%
+}
+
+.scrollable {
+  overflow: auto;
+}
+
+.col-no-padding {
+  padding: 0;
+}
+
+.row-eq-height {
+  display: flex;
+}
+
+.col-centered {
+  float: none;
+  margin: 0 auto;
+}
+
+.vertical-center {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.text-very-small {
+  font-size: 10px;
+}
+
+.text-smaller {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.text-small {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.text-italic {
+  font-style: italic;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+.text-main-color {
+  color: @main-color;
+}
+
+.text-main-color-light {
+  color: @main-color-light;
+}
+
+.text-white {
+  color: @second-color;
+}
+
+.positive-color {
+  color: @main-color;
+  background-color: @positive-color;
+}
+
+.negative-color {
+  color: @main-color;
+  background-color: @negative-color;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+  color:    @main-color;
+  .text-italic;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color:    @main-color;
+  opacity:  1;
+  .text-italic;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color:    @main-color;
+  opacity:  1;
+  .text-italic;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color:    @main-color;
+  .text-italic;
+}
+
+.alert-small {
+  padding: 5px;
+  margin-bottom: 2px;
+}
+
+.main-background {
+  background-image: url("../images/background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.main-background-blur {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.header {
+  height: 25%;
+  text-align: center;
+
+  display: flex;
+  align-items: center;
+}
+
+.header .sidebar-menu-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.header .sidebar-menu-left h2 {
+  margin: 0;
+  font-size: 22px;
+  .text-bold;
+}
+
+.header .sidebar-menu-left a {
+  text-decoration: none;
+  .text-white;
+}
+
+.header .sidebar-menu-left a:hover {
+  .text-main-color;
+}
+
+.header .logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header .logo .logo-image {
+  height: 50%
+}
+
+.header .sidebar-menu-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.header .sidebar-menu-right h1 {
+  margin: 0;
+  .text-bold;
+  .text-main-color;
+}
+
+.not-footer {
+  min-height: 100%;
+  padding-bottom: @footer-size;
+}
+
+.footer {
+  position: relative;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -@footer-size;
+  height: @footer-size;
+  text-align: center;
+  color: @main-color;
+  .full-width;
+  .text-very-small;
+}
+
+.footer a {
+  color: @main-color;
+  font-weight: bold;
+}
+
+.footer p {
+  margin: 10px 0;
+}
+
+.element-block {
+  word-wrap: break-word;
+  display: flex;
+  align-items: center;
+  background-color: @second-color;
+  border: none;
+  padding: 5px;
+  margin: 5px 0px;
+  font-size: 20px;
+  .text-main-color;
+  .text-bold;
+}
+
+.element-block > * {
+  .col-no-padding;
+}
+
+.element-block p {
+  padding: 0 5px;
+  margin: 0;
+}
+
+.element-block form, .element-block-details form {
+  display: inline-block;
+  padding: 0 2px;
+  .full-width;
+}
+
+.element-block form button, .element-block-details form button{
+  display: inline-block;
+  font-size: 16px;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  .full-width;
+}
+
+.element-block-title {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.element-block-title p{
+  padding: 0 5px;
+  margin: 0;
+  .text-small;
+  .text-white;
+}
+
+.element-block-title > *{
+  .col-no-padding;
+}
+
+.element-block-details {
+  word-wrap: break-word;
+  background-color: @second-color;
+  border: none;
+  padding: 5px;
+  margin: -5px 0px 5px;
+  font-size: 16px;
+  display: none;
+  overflow: hidden;
+  transition: max-height 1s ease;
+  .text-main-color;
+}
+
+.element-blocks-details-opened {
+  max-height: 500px;
+}
+.element-blocks-details-closed {
+  max-height: 0px;
+}
+
+/***************************
+    Override Bootstrap
+***************************/
+.panel, .panel-heading{
+  border: none;
+  background-color: transparent;
+  margin: 0;
+}
+
+.panel-default>.panel-heading {
+  font-weight: bold;
+  background-color: fade(@second-color, 80%);
+  color: @main-color;
+}
+
+.panel-title {
+  text-align: center;
+  font-size: 20px;
+}
+
+.panel-body {
+  background-color: fade(@main-color, 80%);
+  padding: 25px;
+}
+
+textarea, select, input, button {
+  border: none;
+  padding: 5px;
+}
+
+input, button {
+  margin: 5px 0px;
+  font-size: 20px;
+}
+
+textarea, select, input {
+  color: @main-color;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+button {
+  color: @second-color;
+  background-color: @main-color-light;
+}
+
+form {
+  margin: 0;
+}
+
+.alert {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+
+/***************************
+    Login page
+***************************/
+.panel-title-login {
+  font-size: 28px;
+}
+
+
+/***************************
+    Register page
+***************************/
+.fieldWrapper label {
+  font-weight: normal;
+  vertical-align: middle;
+  .text-white;
+}
+
+.fieldWrapper input:not([type=checkbox]), .fieldWrapper textarea {
+  font-size: 16px;
+  margin: 2px 0px;
+  .full-width;
+}
+
+.fieldWrapper select {
+  font-size: 16px;
+  margin: 2px 0px;
+}
+
+.label-container-register {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.category-block-register {
+  border: 2px solid @second-color;
+  padding: 10px 0px;
+  margin-bottom: 15px;
+}
+
+.category-title-register {
+  font-size: 20px;
+  font-weight: 300;
+  margin: 0;
+  .text-white;
+}
+
+.multiple-checkbox-container {
+  margin: 5px 0;
+}
+.multiple-checkbox-container label{
+  margin: 0px;
+}
+
+/***************************
+    Override Dropzone
+***************************/
+.dropzone {
+  background-color: rgba(255, 255, 255, 0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 280px;
+  height: 280px;
+  .category-block-register;
+}
+
+.dropzone .dz-message {
+  margin: 15px;
+  vertical-align: middle;
+  font-size: 20px;
+  .text-white;
+}
+
+/***************************
+    Override Jeditable
+***************************/
+//.editable is on the form tag
+.editable-small input{
+  .text-smaller;
+}
+
+/***************************
+    Override Date Time picker
+***************************/
+.input-group > *{
+  background-color: @second-color;
+  border-top: none;
+  border-bottom: none;
+  border-radius: 0;
+}
+
+.input-group > .form-control[readonly] {
+   background-color: @second-color;
+   color: #4d97c8;
+   padding: 5px;
+}
+
+/***************************
+    Group Overiview
+***************************/
+.create-group-input-container {
+  padding-right: 2px;
+  padding-left: 0px;
+}
+
+.create-group-button-container {
+  padding-right: 7px;
+  padding-left: 2px;
+}
+
+/***************************
+    Event Overiview
+***************************/
+.user-block {
+  border: 2px solid @main-color;
+  padding: 10px 0px;
+  margin-bottom: 15px;
+}
+
+.user-block-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  .text-main-color
+}
+
+.user-block .element-block {
+  background-color: @main-color;
+  .text-white;
+}
+
+.user-block .element-block-title p, .event-info-block .element-block-title p {
+  color: @main-color;
+}
+
+.label-radio-event-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.label-radio-event {
+  margin: 0px;
+  padding: 5px;
+  border: none;
+  color: @second-color;
+  background-color: @main-color-light;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.label-radio-event input[type=radio] {
+  display: none;
+}
+
+.label-radio-event-checked {
+  background-color: @positive-color;
+  .text-main-color;
+}
+
+/***************************
+    User events list
+***************************/
+.positive-event {
+  background-color: @positive-color;
+}
+
+.waiting-event {
+  background-color: @waiting-color;
+}
+
+.negative-event {
+  background-color: @negative-color;
+}
+
+.apply-event-button-container {
+  padding: 0 0 0 2px;
+}
+
+.apply-event-input-container {
+  padding: 0 2px 0 0;
+}
+
+.element-block-details .apply-event-button-container > button {
+  padding: 5px;
+  margin: 5px 0;
+}

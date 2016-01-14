@@ -1,0 +1,69 @@
+{% extends "BlueHive/base_admin.html" %}
+{% block title %}Manage Groups{% endblock %}
+
+{% block head %}
+<script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(".clickEdit").editable("{% url 'BlueHive:group_edit' %}", {
+            submitdata: { csrfmiddlewaretoken : "{{ csrf_token }}", _method: "post"},
+            select : true,
+            submit : '<div class="col-xs-6"><button type="submit">OK</button></div>',
+            cancel : '<div class="col-xs-6"><button type="cancel">Cancel</button></div>',
+            cssclass : "editable"
+        });
+    });
+</script>
+{% endblock %}
+
+
+{%  block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">Groups overview</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
+            <div class="row">
+                <p class="category-title-register">Groups</p>
+                {% for group in groups %}
+                <div class="row element-block">
+                    <div class="col-xs-8">
+                        <p class="clickEdit" id="{{ group.id }}">{{ group.value }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="javascript:return false">
+                            <button onclick="document.getElementById({{ group.id }}).click()">Edit</button>
+                        </form>
+                    </div>
+                    <div class="col-xs-2">
+                        <form action="{% url 'BlueHive:group_delete' group.id %}">
+                            <button class="negative-color">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="row">
+                <br>
+                <p class="category-title-register">Add a new group</p>
+                <form action="{% url 'BlueHive:group_add' %}" method="post">{% csrf_token %}
+                    <div class="col-xs-8 create-group-input-container">
+                        <input class="full-width text-small" id="{{newusergroupform.value.id_for_label}}" name="{{newusergroupform.value.name}}" placeholder="Group name" type="text" maxlength="{{newusergroupform.fields.value.max_length}}" >
+
+                        {% if newusergroupform.value.errors %}
+                        {% for error in newusergroupform.value.errors %}
+                        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-4 create-group-button-container">
+                        <button class="full-width text-small" type="submit" name="submit">Create group</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

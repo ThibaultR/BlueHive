@@ -1,0 +1,197 @@
+{% extends "BlueHive/base_user.html" %}
+{% block title %}Your events{% endblock %}
+
+{% block head %}
+<script type="text/javascript" charset="utf-8">
+    $(function() {
+        $(".clickEdit").editable("{% url 'BlueHive:user_events_edit_comment' %}", {
+            submitdata: { csrfmiddlewaretoken : "{{ csrf_token }}", _method: "post"},
+            select : true,
+            submit : '<div class="col-xs-6"><button type="submit">OK</button></div>',
+            cancel : '<div class="col-xs-6"><button type="cancel">Cancel</button></div>',
+            cssclass : "editable-small",
+            'font-size' : '300px',
+        });
+    });
+</script>
+{% endblock %}
+
+
+{%  block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">My events</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
+            <div class="row">
+                {% if applied_events %}
+                <div class="row element-block-title">
+                    <div class="col-xs-4">
+                        <p>Event</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p>Location</p>
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <p>Beginning</p>
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <p>Ending</p>
+                    </div>
+                </div>
+                {% for event_request in applied_events  %}
+                <div class="row element-block event {% if event_request.status == 1%} positive-event {% elif event_request.status == 0 %} waiting-event {% else %} negative-event {% endif %}">
+                    <div class="col-xs-4">
+                        <p>{{ event_request.event_id.name }}</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p class="text-small">{{ event_request.event_id.location }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p class="text-smaller text-center">{{ event_request.event_id.begin_time|date:"d.m.Y"|lower }} <br> {{ event_request.event_id.begin_time|date:"H:i"|lower }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <!--TODO if date show date format-->
+                        <p class="text-smaller text-center">{{ event_request.event_id.end_time }}</p>
+                    </div>
+                </div>
+                <div class="row element-block-details {% if event_request.status == 1%} positive-event {% elif event_request.status == 0 %} waiting-event {% else %} negative-event {% endif %}">
+                    <div class="col-xs-12 event-info-block">
+
+                        <div class="row element-block-title">
+                            <p>Comment</p>
+                        </div>
+                        <div class="row element-block">
+                            {% if event_request.event_id.comment %}
+                            <p class="text-smaller">{{ event_request.event_id.comment }}</p>
+                            {% else %}
+                            <p class="text-smaller text-italic">No comment available</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="row element-block-title">
+                            <p>Description</p>
+                        </div>
+                        <div class="row element-block">
+                            {% if event_request.event_id.description %}
+                            <p class="text-smaller">{{ event_request.event_id.description }}</p>
+                            {% else %}
+                            <p class="text-smaller text-italic">No description available</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="row element-block-title">
+                            <p>Your comment</p>
+                        </div>
+                        <div class="row element-block">
+                            <div class="col-xs-10">
+                                <p class="clickEdit text-smaller" id="{{ event_request.event_id.id }}">{{ event_request.user_comment }}</p>
+                            </div>
+                            <div class="col-xs-2">
+                                <form action="javascript:return false">
+                                    <button onclick="document.getElementById({{ event_request.event_id.id }}).click()">Edit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="category-title-register">No events where you applied.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">New events</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
+            <div class="row">
+                {% if new_events %}
+                <div class="row element-block-title">
+                    <div class="col-xs-4">
+                        <p>Event</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p>Location</p>
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <p>Beginning</p>
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <p>Ending</p>
+                    </div>
+                </div>
+                {% for event in new_events  %}
+                <div class="row element-block event waiting-event">
+                    <div class="col-xs-4">
+                        <p>{{ event.name }}</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p class="text-small">{{ event.location }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p class="text-smaller text-center">{{ event.begin_time|date:"d.m.Y"|lower }} <br> {{ event.begin_time|date:"H:i"|lower }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <!--TODO if date show date format-->
+                        <p class="text-smaller text-center">{{ event.end_time }}</p>
+                    </div>
+                </div>
+                <div class="row element-block-details waiting-event">
+                    <div class="col-xs-12 event-info-block">
+
+                        <div class="row element-block-title">
+                            <p>Comment</p>
+                        </div>
+                        <div class="row element-block">
+                            {% if event.comment %}
+                            <p class="text-smaller">{{ event.comment }}</p>
+                            {% else %}
+                            <p class="text-smaller text-italic">No comment available</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="row element-block-title">
+                            <p>Description</p>
+                        </div>
+                        <div class="row element-block">
+                            {% if event.description %}
+                            <p class="text-smaller">{{ event.description }}</p>
+                            {% else %}
+                            <p class="text-smaller text-italic">No description available</p>
+                            {% endif %}
+                        </div>
+                        <br>
+                        <!--TODO change like "create group" when views.py will be updated to do like other forms-->
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <form action="{% url 'BlueHive:user_events_apply' event.id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                                    <div class="col-xs-8 apply-event-input-container">
+                                        <input class="full-width text-small" name="user_comment" placeholder="Write your comment" type="text" >
+                                    </div>
+                                    <div class="col-xs-4 apply-event-button-container">
+                                        <button class="full-width text-small" type="submit" name="submit">Apply for event</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="category-title-register">No new events.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

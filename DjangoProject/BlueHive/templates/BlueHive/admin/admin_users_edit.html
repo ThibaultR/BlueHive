@@ -1,0 +1,279 @@
+{% extends "BlueHive/user/user_base.html" %}
+<!--TODO get username-->
+{% block title %}User profile{% endblock %}
+
+{% block head %}
+<script type="text/javascript">
+    $.removeData('data/image')
+    Dropzone.options.myAwesomeDropzone = {
+        paramName: "file", // The name that will be used to transfer the file
+        dictResponseError: "Your profile picture was not accepted from the server. Please use another one.",
+        dictDefaultMessage: "Drop your profile picture here",
+        acceptedFiles: "image/jpeg,image/png",
+        maxFilesize: 4, // MB
+        maxFiles: 1,
+        thumbnailWidth:"250",
+        thumbnailHeight:"250",
+        accept: function(file, done) {
+            done();
+        },
+        init: function() {
+
+            thisDropzone = this;
+            this.on("addedfile", function() {
+                if (this.files[1] != null) {
+                    this.removeFile(this.files[0]);
+                }
+            });
+            thisDropzone.on("sending", function(file, xhr, formData) {
+                // Will send the filesize along with the file as POST data.
+                formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+            });
+            var postdata={'csrfmiddlewaretoken': '{{ csrf_token }}'}
+            $.post("{% url 'BlueHive:user_data_get_profile_picture' user_id %}",postdata, function(data) {
+                var mockFile = { name: data.name, size: data.size };
+                thisDropzone.emit("addedfile", mockFile);
+                //let Dropzone download image and resize it
+                thisDropzone.createThumbnailFromUrl(mockFile, data.name);
+                // Make sure that there is no progress bar, etc...
+                thisDropzone.emit("complete", mockFile);
+                thisDropzone.files.push(mockFile);
+            });
+        }
+    };
+</script>
+{% endblock %}
+
+{% block sidebarMenuLeft %}
+{% include "BlueHive/menu_admin.html" %}
+{% endblock %}
+
+<!--TODO get user name-->
+{% block panel-title %}User's profile{% endblock %}
+
+<!--TODO validation on form (if field empty, if not same password...)-->
+{% block dropzone-form-action %}{% url 'BlueHive:user_data_set_profile_picture' user_id %}{% endblock %}
+
+{% block form-action %}{% url 'BlueHive:admin_users_edit' user_id %}{% endblock %}
+
+{% block account-category %}
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+    </div>
+    <div class="col-xs-8">
+        {{ form.email }}
+
+        {% if form.email.errors %}
+        {% for error in form.email.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ password_form.new_password1.id_for_label }}">{{ password_form.new_password1.label }}</label>
+    </div>
+    <div class="col-xs-8 ">
+        {{ password_form.new_password1 }}
+
+        {% if password_form.new_password1.errors %}
+        {% for error in password_form.new_password1.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ password_form.new_password2.id_for_label }}">{{ password_form.new_password2.label }}</label>
+    </div>
+    <div class="col-xs-8">
+        {{ password_form.new_password2 }}
+
+        {% if password_form.new_password2.errors %}
+        {% for error in password_form.new_password2.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ form.user_group.id_for_label }}">{{ form.user_group.label }}</label>
+    </div>
+    <div class="col-xs-8 multiple-checkbox-container">
+        {% for radio in form.user_group %}
+        {{radio}} <br>
+        {% endfor %}
+
+        {% if form.user_group.errors %}
+        {% for error in form.user_group.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ form.rating.id_for_label }}">{{ form.rating.label }}</label>
+    </div>
+    <div class="col-xs-8">
+        <!--TODO try to use nice design (stars, dots...)-->
+        {{ form.rating }}
+
+        {% if form.rating.errors %}
+        {% for error in form.rating.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<!--TODO use selectDateWidget and set default value...-->
+{% endblock %}
+
+<!--TODO get user name-->
+{% block submit-button %}Update user's profile{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>Profile</h2>
+
+<form action="{% url 'BlueHive:user_data_set_profile_picture' user_id %}" class="dropzone"  id="my-awesome-dropzone"></form>
+
+<form action="{% url 'BlueHive:admin_users_edit' user_id %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+    {{ form.non_field_errors }}
+    <div class="fieldWrapper">
+        {{ password_form.new_password1.errors }}
+        <label for="{{ password_form.new_password1.id_for_label }}">{{ password_form.new_password1.label_tag }}</label>
+        {{ password_form.new_password1 }}
+    </div>
+    <div class="fieldWrapper">
+        {{ password_form.new_password2.errors }}
+        <label for="{{ password_form.new_password2.id_for_label }}">{{password_form.new_password2.label_tag }}</label>
+        {{ password_form.new_password2 }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.user_group.errors }}
+        <label for="{{ form.user_group.id_for_label }}">{{ form.user_group.label_tag }}</label>
+        {{ form.user_group }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.rating.errors }}
+        <label for="{{ form.rating.id_for_label }}">{{ form.rating.label_tag }}</label>
+        {{ form.rating }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.email.errors }}
+        <label for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
+        {{ form.email }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.password1.errors }}
+        <label for="{{ form.password1.id_for_label }}">{{ form.password1.label_tag }}</label>
+        {{ form.password1 }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.password2.errors }}
+        <label for="{{ form.password2.id_for_label }}">{{ form.password2.label_tag }}</label>
+        {{ form.password2 }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.first_name.errors }}
+        <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label_tag }}</label>
+        {{ form.first_name }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.last_name.errors }}
+        <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label_tag }}</label>
+        {{ form.last_name }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.phone_number.errors }}
+        <label for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label_tag }}</label>
+        {{ form.phone_number }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.birth_date.errors }}
+        <label for="{{ form.birth_date.id_for_label }}">{{ form.birth_date.label_tag }}</label>
+        {{ form.birth_date }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.social_security_number.errors }}
+        <label for="{{ form.social_security_number.id_for_label }}">{{ form.social_security_number.label_tag }}</label>
+        {{ form.social_security_number }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.address.errors }}
+        <label for="{{ form.address.id_for_label }}">{{ form.address.label_tag }}</label>
+        {{ form.address }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.zip_code.errors }}
+        <label for="{{ form.zip_code.id_for_label }}">{{ form.zip_code.label_tag }}</label>
+        {{ form.zip_code }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.city.errors }}
+        <label for="{{ form.city.id_for_label }}">{{ form.city.label_tag }}</label>
+        {{ form.city }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.nationality.errors }}
+        <label for="{{ form.nationality.id_for_label }}">{{ form.nationality.label_tag }}</label>
+        {{ form.nationality }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.education.errors }}
+        <label for="{{ form.education.id_for_label }}">{{ form.education.label_tag }}</label>
+        {{ form.education }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.job_position.errors }}
+        <label for="{{ form.job_position.id_for_label }}">{{ form.job_position.label_tag }}</label>
+        {{ form.job_position }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.work_experience.errors }}
+        <label for="{{ form.work_experience.id_for_label }}">{{ form.work_experience.label_tag }}</label>
+        {{ form.work_experience }}
+    </div>
+
+    <div class="fieldWrapper">
+        {{ form.language.errors }}
+        <label for="{{ form.language.id_for_label }}">{{ form.language.label_tag }}</label>
+        {{ form.language }}
+    </div>
+
+    <div class="fieldWrapper">
+        {{ form.license.errors }}
+        <label for="{{ form.license.id_for_label }}">{{ form.license.label_tag }}</label>
+        {{ form.license }}
+    </div>
+
+    <div class="fieldWrapper">
+        {{ form.image.errors }}
+        <label for="{{ form.image.id_for_label }}">{{ form.image.label_tag }}</label>
+        {{ form.image }}
+    </div>
+
+
+    <input type="submit" value="Update" />
+
+</form>

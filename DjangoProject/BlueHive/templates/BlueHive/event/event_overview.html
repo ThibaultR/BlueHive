@@ -1,0 +1,151 @@
+{% extends "BlueHive/base_admin.html" %}
+
+{% block title %}Event Overview{% endblock %}
+
+
+{%  block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">Events overview</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-centered ">
+            <div class="row">
+                {% if events %}
+                <div class="row element-block-title">
+                    <div class="col-xs-4">
+                        <p>Event</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p>Location</p>
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <p>Beginning</p>
+                    </div>
+                    <div class="col-xs-2 text-center">
+                        <p>Ending</p>
+                    </div>
+                </div>
+                {% for event in events %}
+                <div class="row element-block event">
+                    <div class="col-xs-4">
+                        <p>{{ event.name }}</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p class="text-small">{{ event.location }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p class="text-smaller text-center">{{ event.begin_time|date:"d.m.Y"|lower }} <br> {{ event.begin_time|date:"H:i"|lower }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <!--TODO if date show date format-->
+                        <p class="text-smaller text-center">{{ event.end_time }}</p>
+                    </div>
+                </div>
+                <div class="row element-block-details">
+                    <div class="col-xs-12">
+                        <p class="text-smaller">({{ event.get_event_requests|length }} users applied /   {{ event.get_event_requests_amount_user_accepted|length }} users accepted)</p>
+                        {% if event.get_event_requests %}
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p class="user-block-title">Users</p>
+                                <div class="user-block">
+                                    <div class="row element-block-title">
+                                        <div class="col-xs-3">
+                                            <p>Name</p>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <p>Comment</p>
+                                        </div>
+                                        <div class="col-xs-1">
+                                            <p>Rating</p>
+                                        </div>
+                                        <div class="col-xs-2">
+                                        </div>
+                                        <div class="col-xs-2">
+                                        </div>
+                                    </div>
+
+
+                                    {% for event_request in event.get_event_requests %}
+                                    <div class="row element-block">
+                                        <div class="col-xs-3">
+                                            <p class="text-small">{{ event_request.user_id.first_name }} {{ event_request.user_id.last_name }}</p>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <p class="text-smaller">{{ event_request.user_comment }}</p>
+                                        </div>
+                                        <div class="col-xs-1">
+                                            <p class="text-small">{{ event_request.user_id.rating }}</p>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <form class="text-center" action="{% url 'BlueHive:event_overview' %}" method="post">{% csrf_token %}
+                                                <input type="hidden" name="event_id" value="{{ event.id }}">
+                                                <div class="label-radio-event-container">
+                                                    <label class="label-radio-event {% if event_request.status == -1 %} label-radio-event-checked {% endif %}">
+                                                        <input type="radio" name="userid_{{ event_request.user_id.id }}" value="rejected"
+                                                               onclick="onClickRadioUserEventApplication(this.form)"
+                                                               {% if event_request.status == -1 %} checked {% endif %}>
+                                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="label-radio-event-container">
+                                                    <label class="label-radio-event {% if event_request.status == 0 %} label-radio-event-checked {% endif %}">
+                                                        <input type="radio" name="userid_{{ event_request.user_id.id }}" value="waiting"
+                                                               onclick="onClickRadioUserEventApplication(this.form)"
+                                                               {% if event_request.status == 0 %} checked {% endif %}>
+                                                        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="label-radio-event-container">
+                                                    <label class="label-radio-event {% if event_request.status == 1 %} label-radio-event-checked {% endif %}">
+                                                        <input type="radio" name="userid_{{ event_request.user_id.id }}" value="accepted"
+                                                               onclick="onClickRadioUserEventApplication(this.form)"
+                                                               {% if event_request.status == 1 %} checked {% endif %}>
+                                                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                                    </label>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <form action="{% url 'BlueHive:admin_users_status' %}" method="post">{% csrf_token %}
+                                                <input type="hidden" name="user_id" value="{{ event_request.user_id.id }}">
+                                                <button type="submit" name="value" value="edit">Show</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-xs-3">
+
+                            </div>
+                            <div class="col-xs-3">
+
+                            </div>
+                            <div class="col-xs-3">
+                                <form action="{% url 'BlueHive:event_edit' event.id %}">
+                                    <button type="submit">Show</button>
+                                </form>
+                            </div>
+                            <div class="col-xs-3">
+                                <form action="{% url 'BlueHive:event_status' %}" method="post">{% csrf_token %}
+                                    <input type="hidden" name="event_id" value="{{ event.id }}">
+                                    <button class="negative-color" type="submit" name="value" value="deactivate">Deactivate</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="category-title-register">No events.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

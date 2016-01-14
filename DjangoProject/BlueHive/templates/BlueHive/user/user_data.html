@@ -1,0 +1,103 @@
+{% extends "BlueHive/user/user_base.html" %}
+{% block title %}Your profile{% endblock %}
+
+{% block head %}
+<script type="text/javascript">
+    $.removeData('data/image')
+    Dropzone.options.myAwesomeDropzone = {
+        paramName: "file", // The name that will be used to transfer the file
+        dictResponseError: "Your profile picture was not accepted from the server. Please use another one.",
+        dictDefaultMessage: "Drop your profile picture here",
+        acceptedFiles: "image/jpeg,image/png",
+        maxFilesize: 4, // MB
+        maxFiles: 1,
+        thumbnailWidth:"250",
+        thumbnailHeight:"250",
+        accept: function(file, done) {
+            done();
+        },
+        init: function() {
+
+            thisDropzone = this;
+            this.on("addedfile", function() {
+                if (this.files[1] != null) {
+                    this.removeFile(this.files[0]);
+                }
+            });
+            thisDropzone.on("sending", function(file, xhr, formData) {
+                // Will send the filesize along with the file as POST data.
+                formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+            });
+            var postdata={'csrfmiddlewaretoken': '{{ csrf_token }}'}
+            $.post("{% url 'BlueHive:user_data_get_profile_picture' 0 %}",postdata, function(data) {
+                var mockFile = { name: data.name, size: data.size };
+                thisDropzone.emit("addedfile", mockFile);
+                //let Dropzone download image and resize it
+                thisDropzone.createThumbnailFromUrl(mockFile, data.name);
+                // Make sure that there is no progress bar, etc...
+                thisDropzone.emit("complete", mockFile);
+                thisDropzone.files.push(mockFile);
+            });
+        }
+    };
+</script>
+{% endblock %}
+
+{% block sidebarMenuLeft %}
+{% include "BlueHive/menu_user.html" %}
+{% endblock %}
+
+{% block panel-title %}Profile{% endblock %}
+
+<!--TODO shouldn't disconnect after change password-->
+{% block dropzone-form-action %}{% url 'BlueHive:user_data_set_profile_picture' 0 %}{% endblock %}
+
+{% block form-action %}{% url 'BlueHive:user_data' %}{% endblock %}
+
+{% block account-category %}
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ password_form.old_password.id_for_label }}">{{ password_form.old_password.label }}</label>
+    </div>
+    <div class="col-xs-8">
+        {{ password_form.old_password }}
+
+        {% if password_form.old_password.errors %}
+        {% for error in password_form.old_password.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ password_form.new_password1.id_for_label }}">{{ password_form.new_password1.label }}</label>
+    </div>
+    <div class="col-xs-8 ">
+        {{ password_form.new_password1 }}
+
+        {% if password_form.new_password1.errors %}
+        {% for error in password_form.new_password1.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row row-eq-height fieldWrapper">
+    <div class="col-xs-4 text-right label-container-register">
+        <label for="{{ password_form.new_password2.id_for_label }}">{{ password_form.new_password2.label }}</label>
+    </div>
+    <div class="col-xs-8">
+        {{ password_form.new_password2 }}
+
+        {% if password_form.new_password2.errors %}
+        {% for error in password_form.new_password2.errors %}
+        <div class="alert alert-danger alert-small">{{ error|escape }}</div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<!--TODO use selectDateWidget and set default value...-->
+{% endblock %}
+
+{% block submit-button %}Update profile{% endblock %}

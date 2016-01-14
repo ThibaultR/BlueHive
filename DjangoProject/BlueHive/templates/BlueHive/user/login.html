@@ -1,0 +1,36 @@
+{% extends "BlueHive/base.html" %}
+{% block title %}Login{% endblock %}
+
+
+{%  block content %}
+<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-centered ">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title panel-title-login">Login</div>
+        </div>
+        <div class="panel-body">
+            {% if message %}
+            <div class="alert alert-warning">{{message}}</div>
+            {% endif %}
+            <div class="col-xs-8 col-centered ">
+                <form action="/user/login/" method="post">{% csrf_token %}
+                    <input class="full-width" type="text" placeholder="E-Mail Address" name="email" value="" id="username">
+                    <input class="full-width" type="password" placeholder="Password" name="password" value="" id="password">
+                    <button class="full-width" type="submit">Login</button>
+                </form>
+                <p class="text-white text-center">
+                    <!--TODO Show some alert dialog to get password back...-->
+                    <a class="text-white" href="/user/login">Forgot your password?</a>
+                </p>
+                <hr class="half-width">
+                <p class="text-white text-center">
+                 New at company_name?
+                </p>
+                <form action="{% url 'BlueHive:user_register' %}">
+                    <button class="full-width">Register now!</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
